@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.17)
+  
+cmake_minimum_required(VERSION 3.1...3.17)
 project(CosmosWallet VERSION 1.0
         DESCRIPTION "Api for stuff"
         LANGUAGES CXX)
