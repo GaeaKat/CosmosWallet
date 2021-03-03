@@ -28,7 +28,7 @@ namespace Cosmos {
 
         //data::bytes block(const Gigamonkey::digest<32> &digest) const ;
     private:
-        mutable data::tools::RateLimiter rateLimit;
+        mutable data::tools::rate_limiter rateLimit;
         mutable data::networking::Http http;
     };
 }

@@ -14,7 +14,7 @@ namespace Cosmos{
 
     data::bytes MatterPool_TimeChain::transaction(const Gigamonkey::digest<32> &digest) const {
         auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
-        waitForRateLimit()
+        waitForRateLimit();
         std::string output=http.GET("media.bitcoinfiles.org","/tx/"+ tmp+"/raw");
         //std::cout << output << std::endl;
         if(output=="{ }")
