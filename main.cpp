@@ -11,5 +11,7 @@ int main() {
     auto tmp=timechain.transaction(digest);
 
     std::cout << tmp.Value.Header << tmp << std::endl;
+    Cosmos::MatterpoolApi api;
+    std::cout <<"Price: " << api.price(tmp.Value.Header.Timestamp) <<std::endl;
     return 0;
 }

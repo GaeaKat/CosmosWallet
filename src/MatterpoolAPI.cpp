@@ -74,4 +74,17 @@ namespace Cosmos {
         json jOutput=json::parse(output);
         return jOutput["result"][0]["height"];
     }
+
+    double MatterpoolApi::price(Gigamonkey::Bitcoin::timestamp timestamp) {
+        time_t rawtime=static_cast<time_t>(uint32_t(timestamp));
+        struct tm * timeinfo;
+        char buffer [11];
+        timeinfo = localtime (&rawtime);
+
+        strftime (buffer,11,"%d-%m-%Y",timeinfo);
+        waitForRateLimit();
+        std::string output=this->http.GET("api.coingecko.com","/api/v3/coins/bitcoin-cash-sv/history?date="+std::string(buffer));
+        json jOutput=json::parse(output);
+        return jOutput["market_data"]["current_price"]["usd"];
+    }
 }
