@@ -68,13 +68,20 @@ find_package(yaml-cpp)
 
 ## Enable testing
 include(CTest)
-
+#mongodb cxx wrapper
+find_package(libmongocxx REQUIRED)
+find_package(libbsoncxx REQUIRED)
+include_directories(${LIBMONGOCXX_LIBRARIES})
+include_directories(${LIBBSONCXX_LIBRARIES})
+include_directories(${LIBMONGOCXX_INCLUDE_DIRS})
+include_directories(${LIBBSONCXX_INCLUDE_DIRS})
 if(PACKAGE_TESTS)
     enable_testing()
     add_subdirectory(test)
 endif()
 add_executable(CosmosWallet main.cpp src/matterpool_timechain.cpp
         src/MatterpoolAPI.cpp
-        src/types.cpp)
+        src/types.cpp
+        src/mongodb_headers.cpp)
 target_include_directories(CosmosWallet PUBLIC include)
-target_link_libraries(CosmosWallet gigamonkey yaml-cpp)
+target_link_libraries(CosmosWallet gigamonkey yaml-cpp ${LIBMONGOCXX_LIBRARIES} ${LIBBSONCXX_LIBRARIES})

@@ -6,41 +6,89 @@
 
 namespace Cosmos{
 
-    data::list<Gigamonkey::uint<80>> MatterPool_TimeChain::headers(data::uint64 since_height) const {
+    data::list<Gigamonkey::Bitcoin::ledger::block_header> MatterPool_TimeChain::headers(data::uint64 since_height) const {
         //auto vals=this->api.headers(since_height);
         std::string output=http.GET("txdb.mattercloud.io","/api/v1/blockheader/"+ std::to_string(since_height+(1000*0))+"?limit=1000&order=asc");
         //return data::list<Gigamonkey::uint<80>>();
     }
 
-    data::bytes MatterPool_TimeChain::transaction(const Gigamonkey::digest<32> &digest) const {
-        auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
-        waitForRateLimit();
-        std::string output=http.GET("media.bitcoinfiles.org","/tx/"+ tmp+"/raw");
-        //std::cout << output << std::endl;
-        if(output=="{ }")
-            return data::bytes();
-        return data::bytes_view(data::encoding::hex::view{output});
+    data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> MatterPool_TimeChain::transaction(const Gigamonkey::digest<32> &txid) const {
+        Gigamonkey::Bitcoin::ledger::double_entry dentry;
+        auto trans=api.transaction(txid);
+        auto ptr=std::make_shared<Gigamonkey::bytes>(trans);
+        auto height=api.transaction_height(const_cast<Gigamonkey::digest256 &>(txid));
+        auto header=this->header(height);
+        if(header.valid()) {
+            auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Gigamonkey::Merkle::proof(), header.Header));
+            return entry;
+        }
+        return data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry());
+
     }
 
-    Gigamonkey::Merkle::path MatterPool_TimeChain::merkle_path(const Gigamonkey::digest<32> &digest) const {
-        return Gigamonkey::Merkle::path();
+
+
+    Gigamonkey::Bitcoin::ledger::block_header MatterPool_TimeChain::header(const Gigamonkey::digest<32> &digest) const {
+        auto headerOut=db[digest];
+
+        if(!headerOut.valid()) {
+            json data = api.header(digest);
+            Gigamonkey::Bitcoin::header header = data;
+            //header(digest256 s, Bitcoin::header h, N n, work::difficulty d) : Hash{s}, Header{h}, Height{n}, Cumulative{d} {}
+            std::string diffString;
+
+            data["difficulty"].get_to(diffString);
+            Gigamonkey::work::difficulty diff(stod(diffString));
+            u_int32_t heightString;
+
+            data["height"].get_to(heightString);
+
+            data::math::number::gmp::N height(heightString);
+            headerOut=Gigamonkey::Bitcoin::ledger::block_header(digest, header, height, diff);
+
+            db.insert(headerOut);
+        }
+        return headerOut;
     }
 
-    Gigamonkey::uint<80> MatterPool_TimeChain::header(const Gigamonkey::digest<32> &digest) const {
-        return Gigamonkey::uint<80>();
-    }
 
-    data::list<Gigamonkey::Bitcoin::txid>
-    MatterPool_TimeChain::transactions(const Gigamonkey::digest<32> &digest) const {
-        return data::list<Gigamonkey::Bitcoin::txid>();
-    }
-
-    data::bytes MatterPool_TimeChain::block(const Gigamonkey::digest<32> &digest) const {
-        return data::bytes();
-    }
     void MatterPool_TimeChain::waitForRateLimit() const {
         long waitTime=rateLimit.getTime();
         if(waitTime > 0)
             sleep(waitTime);
+    }
+
+    Gigamonkey::bytes MatterPool_TimeChain::block(const Gigamonkey::digest256 &) const {
+        return Gigamonkey::bytes();
+    }
+
+    bool MatterPool_TimeChain::broadcast(const data::bytes_view &) {
+        return false;
+    }
+
+    Gigamonkey::Bitcoin::ledger::block_header MatterPool_TimeChain::header(data::uint64 height) const {
+        auto headerOut=db[height];
+
+        if(!headerOut.valid()) {
+            json data = api.header(height);
+            Gigamonkey::Bitcoin::header header = data;
+            //header(digest256 s, Bitcoin::header h, N n, work::difficulty d) : Hash{s}, Header{h}, Height{n}, Cumulative{d} {}
+            std::string diffString;
+
+            data["difficulty"].get_to(diffString);
+            Gigamonkey::work::difficulty diff(stod(diffString));
+            u_int32_t heightString;
+
+            data["height"].get_to(heightString);
+
+            data::math::number::gmp::N height(heightString);
+            std::string hashString;
+            data["hash"].get_to(hashString);
+            Gigamonkey::digest256 digest("0x"+hashString);
+            headerOut=Gigamonkey::Bitcoin::ledger::block_header(digest, header, height, diff);
+
+            db.insert(headerOut);
+        }
+        return headerOut;
     }
 }

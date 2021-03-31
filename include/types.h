@@ -7,8 +7,16 @@
 
 #include <cstdint>
 #include <nlohmann/json.hpp>
+#include <gigamonkey/timechain.hpp>
 
 using nlohmann::json;
+
+namespace Gigamonkey {
+    namespace Bitcoin {
+        void from_json(const json& j, header& header);
+        void to_json(json& j, const header& header);
+    }
+}
 namespace Cosmos {
     std::vector<char> HexToBytes(const std::string& hex);
 
@@ -30,8 +38,7 @@ namespace Cosmos {
             char chain_work[32];
 
         };
-        void from_json(const json& j, BitcoinHeader& header);
-        void to_json(json& j, const BitcoinHeader& header);
+
 
 
     }
