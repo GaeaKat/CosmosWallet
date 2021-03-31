@@ -7,8 +7,8 @@
 
 namespace Cosmos {
 
-    std::vector<Gigamonkey::Bitcoin::header> MatterpoolApi::headers(data::uint64 since_height){
-        auto ret=std::vector<Gigamonkey::Bitcoin::header>();
+    data::list<Gigamonkey::Bitcoin::ledger::block_header> MatterpoolApi::headers(data::uint64 since_height){
+        auto ret=data::list<Gigamonkey::Bitcoin::headers::header>();
         int i=0;
         json jOutput;
         do {
@@ -16,8 +16,23 @@ namespace Cosmos {
             std::string output=this->http.GET("txdb.mattercloud.io","/api/v1/blockheader/"+ std::to_string(since_height+(1000*i))+"?limit=1000&order=asc");
             i++;
             jOutput=json::parse(output);
-            for(Gigamonkey::Bitcoin::header header : jOutput["result"]) {
-                ret.push_back(header);
+            for(json headerData : jOutput["result"]) {
+                Gigamonkey::Bitcoin::header header = headerData;
+                //header(digest256 s, Bitcoin::header h, N n, work::difficulty d) : Hash{s}, Header{h}, Height{n}, Cumulative{d} {}
+                std::string diffString;
+
+                headerData["difficulty"].get_to(diffString);
+                Gigamonkey::work::difficulty diff(stod(diffString));
+                u_int32_t heightString;
+
+                headerData["height"].get_to(heightString);
+
+                data::math::number::gmp::N height(heightString);
+                std::string hashString;
+                headerData["hash"].get_to(hashString);
+                Gigamonkey::digest256 digest("0x"+hashString);
+                auto headerOut=Gigamonkey::Bitcoin::ledger::block_header(digest, header, height, diff);
+                ret=ret << headerOut;
             }
 
         }while(jOutput["result"].size()==1000);

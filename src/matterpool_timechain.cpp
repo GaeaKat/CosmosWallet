@@ -8,7 +8,11 @@ namespace Cosmos{
 
     data::list<Gigamonkey::Bitcoin::ledger::block_header> MatterPool_TimeChain::headers(data::uint64 since_height) const {
         //auto vals=this->api.headers(since_height);
-        std::string output=http.GET("txdb.mattercloud.io","/api/v1/blockheader/"+ std::to_string(since_height+(1000*0))+"?limit=1000&order=asc");
+        data::list<Gigamonkey::Bitcoin::ledger::block_header> headers=api.headers(since_height);
+        for(auto header:headers) {
+            db.insert(header);
+        }
+        return headers;
         //return data::list<Gigamonkey::uint<80>>();
     }
 

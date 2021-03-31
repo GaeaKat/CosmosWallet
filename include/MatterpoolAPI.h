@@ -17,7 +17,7 @@ namespace Cosmos {
     class MatterpoolApi {
     public:
         MatterpoolApi() : rateLimit(100,60) {}
-        std::vector<Gigamonkey::Bitcoin::header> headers(data::uint64 since_height) ;
+        data::list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) ;
         void waitForRateLimit() ;
 
         data::bytes transaction(const Gigamonkey::digest<32> &digest) ;

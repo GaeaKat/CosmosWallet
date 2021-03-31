@@ -48,9 +48,16 @@ namespace Cosmos {
     bool MongoDB_Headers::insert(const header &header) {
         MongoDB_Headers::initialize();
         auto doc=to_document(header);
-        bsoncxx::stdx::optional<mongocxx::result::insert_one> result =MongoDB_Headers::headers_collection.insert_one(
-                std::move(doc));
-        return (bool)result;
+        try {
+            bsoncxx::stdx::optional<mongocxx::result::insert_one> result = MongoDB_Headers::headers_collection.insert_one(
+                    std::move(doc));
+            return (bool)result;
+        }
+        catch(std::exception e) {
+
+        }
+
+        return false;
     }
 
     bool MongoDB_Headers::insert(const Gigamonkey::Merkle::proof &proof) {
