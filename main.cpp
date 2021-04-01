@@ -15,5 +15,8 @@ int main() {
     std::cout <<"Price: " << api.price(tmp.Value.Header.Timestamp) <<std::endl;
     Gigamonkey::Bitcoin::address addr("18FnwHbZz5wwCxJ4h2sQsAMYd7qyHryJUX");
     auto transactions=timechain.transactions(addr);
+    for(auto tmpTrans:transactions) {
+        std::cout  << tmpTrans.Value.Header << std::endl;
+    }
     return 0;
 }

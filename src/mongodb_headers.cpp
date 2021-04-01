@@ -111,7 +111,6 @@ namespace Cosmos {
         std::string previousString=doc["Previous"].get_utf8().value.to_string();
         header.Previous = Gigamonkey::digest256 ("0x"+previousString);
         header.Version = doc["Version"].get_int32().value;
-        std::cout << header.Version << std::endl;
         std::string markleString=doc["MerkleRoot"].get_utf8().value.to_string();
         header.MerkleRoot = Gigamonkey::digest256 ("0x"+markleString);
         header.Timestamp = Gigamonkey::Bitcoin::timestamp(doc["Timestamp"].get_int64().value);
