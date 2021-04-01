@@ -102,4 +102,12 @@ namespace Cosmos {
         json jOutput=json::parse(output);
         return jOutput["market_data"]["current_price"]["usd"];
     }
+
+    json MatterpoolApi::transactions(const Gigamonkey::Bitcoin::address address) {
+        auto tmp=address.write();
+        waitForRateLimit();
+        std::string output=this->http.GET("txdb.mattercloud.io","/api/v1/txout/address/history/"+tmp);
+        json jOutput=json::parse(output);
+        return jOutput["result"];
+    }
 }

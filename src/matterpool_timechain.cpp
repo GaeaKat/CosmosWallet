@@ -95,4 +95,27 @@ namespace Cosmos{
         }
         return headerOut;
     }
+
+    data::list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>>
+    MatterPool_TimeChain::transactions(const Gigamonkey::Bitcoin::address address) {
+        auto txids=api.transactions(address);
+        data::list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>> ret;
+        for(json tx : txids) {
+            Gigamonkey::Bitcoin::ledger::double_entry dentry;
+            std::string txString;
+            tx["txid"].get_to(txString);
+            Gigamonkey::digest<32> txid("0x"+txString);
+            auto trans=api.transaction(txid);
+            auto ptr=std::make_shared<Gigamonkey::bytes>(trans);
+            uint64_t height;
+            tx["height"].get_to(height);
+            auto header=this->header(height);
+            if(header.valid()) {
+                auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Gigamonkey::Merkle::proof(), header.Header));
+                ret = ret << entry;
+            }
+
+        }
+        return ret;
+    }
 }

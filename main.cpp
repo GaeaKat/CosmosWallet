@@ -13,5 +13,7 @@ int main() {
     std::cout << tmp.Value.Header << tmp << std::endl;
     Cosmos::MatterpoolApi api;
     std::cout <<"Price: " << api.price(tmp.Value.Header.Timestamp) <<std::endl;
+    Gigamonkey::Bitcoin::address addr("18FnwHbZz5wwCxJ4h2sQsAMYd7qyHryJUX");
+    auto transactions=timechain.transactions(addr);
     return 0;
 }

@@ -19,6 +19,7 @@ namespace Cosmos {
 
         data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> transaction(const Gigamonkey::digest<32> &txid) const override;
         Gigamonkey::Bitcoin::ledger::block_header header(const Gigamonkey::digest<32> &digest) const override;
+        data::list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>> transactions(const Gigamonkey::Bitcoin::address address);
     private:
         Gigamonkey::Bitcoin::ledger::block_header header(data::uint64 height) const ;
         void waitForRateLimit() const;

@@ -8,6 +8,7 @@
 #include <data/networking/http.h>
 #include <gigamonkey/hash.hpp>
 #include <gigamonkey/ledger.hpp>
+#include <gigamonkey/address.hpp>
 
 #ifndef COSMOSWALLET_MATTERPOOLAPI_H
 #define COSMOSWALLET_MATTERPOOLAPI_H
@@ -21,7 +22,7 @@ namespace Cosmos {
         void waitForRateLimit() ;
 
         data::bytes transaction(const Gigamonkey::digest<32> &digest) ;
-
+        json transactions(const Gigamonkey::Bitcoin::address address);
         //Gigamonkey::Merkle::path merkle_path(const Gigamonkey::digest<32> &digest) const;
 
         json header(const Gigamonkey::digest<32> &digest);
