@@ -10,6 +10,8 @@
 #define COSMOSWALLET_MATTERPOOL_TIMECHAIN_H
 
 namespace Cosmos {
+    constexpr long BSV_FORK_TIMESTAMP = 1542304320;
+    constexpr long CASH_FORK_TIMESTAMP = 1501593373;
     class MatterPool_TimeChain: public Gigamonkey::Bitcoin::timechain {
     public:
         MatterPool_TimeChain(): rateLimit(100,60) {}

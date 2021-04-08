@@ -140,10 +140,10 @@ namespace Cosmos{
         strftime (buffer,11,"%d-%m-%Y",timeinfo);
         waitForRateLimit();
         std::string output;
-        if(((long)timestamp) > 1542304320) {
+        if(((long)timestamp) > BSV_FORK_TIMESTAMP) {
             output = this->http.GET("api.coingecko.com",
                                     "/api/v3/coins/bitcoin-cash-sv/history?date=" + std::string(buffer));
-        } else if(((long)timestamp) > 1501593373) {
+        } else if(((long)timestamp) > CASH_FORK_TIMESTAMP) {
             output = this->http.GET("api.coingecko.com",
                                     "/api/v3/coins/bitcoin-cash/history?date=" + std::string(buffer));
         }
