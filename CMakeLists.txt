@@ -82,6 +82,6 @@ endif()
 add_executable(CosmosWallet main.cpp src/matterpool_timechain.cpp
         src/MatterpoolAPI.cpp
         src/types.cpp
-        src/mongodb_headers.cpp)
+        src/mongodb_db.cpp)
 target_include_directories(CosmosWallet PUBLIC include)
 target_link_libraries(CosmosWallet gigamonkey yaml-cpp ${LIBMONGOCXX_LIBRARIES} ${LIBBSONCXX_LIBRARIES})

@@ -17,16 +17,23 @@ namespace Cosmos{
     }
 
     data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> MatterPool_TimeChain::transaction(const Gigamonkey::digest<32> &txid) const {
+
         Gigamonkey::Bitcoin::ledger::double_entry dentry;
+        auto cache=db.get_transaction(txid);
+        if(cache.Key!=Gigamonkey::Bitcoin::txid())
+            return cache;
         auto trans=api.transaction(txid);
         auto ptr=std::make_shared<Gigamonkey::bytes>(trans);
         auto height=api.transaction_height(const_cast<Gigamonkey::digest256 &>(txid));
         auto header=this->header(height);
         if(header.valid()) {
             auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Gigamonkey::Merkle::proof(), header.Header));
+            db.insert(entry);
             return entry;
         }
-        return data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry());
+        auto tmp=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry());
+
+        return tmp;
 
     }
 
@@ -105,6 +112,11 @@ namespace Cosmos{
             std::string txString;
             tx["txid"].get_to(txString);
             Gigamonkey::digest<32> txid("0x"+txString);
+            auto cache=db.get_transaction(txid);
+            if(cache.Key!=Gigamonkey::Bitcoin::txid()) {
+                ret = ret << cache;
+                continue;
+            }
             auto trans=api.transaction(txid);
             auto ptr=std::make_shared<Gigamonkey::bytes>(trans);
             uint64_t height;
@@ -112,10 +124,40 @@ namespace Cosmos{
             auto header=this->header(height);
             if(header.valid()) {
                 auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Gigamonkey::Merkle::proof(), header.Header));
+                db.insert(entry);
                 ret = ret << entry;
             }
 
         }
         return ret;
+    }
+    double MatterPool_TimeChain::price(Gigamonkey::Bitcoin::timestamp timestamp) {
+        time_t rawtime=static_cast<time_t>(uint32_t(timestamp));
+        struct tm * timeinfo;
+        char buffer [11];
+        timeinfo = localtime (&rawtime);
+
+        strftime (buffer,11,"%d-%m-%Y",timeinfo);
+        waitForRateLimit();
+        std::string output;
+        if(((long)timestamp) > 1542304320) {
+            output = this->http.GET("api.coingecko.com",
+                                    "/api/v3/coins/bitcoin-cash-sv/history?date=" + std::string(buffer));
+        } else if(((long)timestamp) > 1501593373) {
+            output = this->http.GET("api.coingecko.com",
+                                    "/api/v3/coins/bitcoin-cash/history?date=" + std::string(buffer));
+        }
+        else {
+            // bitcoin
+            output = this->http.GET("api.coingecko.com",
+                                    "/api/v3/coins/bitcoin/history?date=" + std::string(buffer));
+        }
+        try {
+            json jOutput = json::parse(output);
+            return jOutput["market_data"]["current_price"]["usd"];
+        }
+        catch(std::exception e) {
+            return 0;
+        }
     }
 }

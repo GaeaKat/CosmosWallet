@@ -4,7 +4,7 @@
 
 #include <gigamonkey/ledger.hpp>
 #include "MatterpoolAPI.h"
-#include "mongodb_headers.h"
+#include "mongodb_db.h"
 
 #ifndef COSMOSWALLET_MATTERPOOL_TIMECHAIN_H
 #define COSMOSWALLET_MATTERPOOL_TIMECHAIN_H
@@ -13,7 +13,7 @@ namespace Cosmos {
     class MatterPool_TimeChain: public Gigamonkey::Bitcoin::timechain {
     public:
         MatterPool_TimeChain(): rateLimit(100,60) {}
-
+        double price(Gigamonkey::Bitcoin::timestamp timestamp);
 
         data::list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) const override;
 
@@ -35,7 +35,7 @@ namespace Cosmos {
         mutable data::tools::rate_limiter rateLimit;
         mutable data::networking::Http http;
         mutable MatterpoolApi api;
-        mutable MongoDB_Headers db;
+        mutable MongoDB_DB db;
 
     };
 }

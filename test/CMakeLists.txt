@@ -29,9 +29,9 @@ endmacro()
 package_add_test(TestHeaders TestHeaders.cpp ../src/matterpool_timechain.cpp
         ../src/MatterpoolAPI.cpp
         ../src/types.cpp
-        ../src/mongodb_headers.cpp)
+        ../src/mongodb_db.cpp)
 
-package_add_test(TestTransactions TestTransactions.cpp ../src/matterpool_timechain.cpp
+package_add_test(TestTransaction TestTransaction.cpp ../src/matterpool_timechain.cpp
         ../src/MatterpoolAPI.cpp
         ../src/types.cpp
-        ../src/mongodb_headers.cpp)
+        ../src/mongodb_db.cpp)

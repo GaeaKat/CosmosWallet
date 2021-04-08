@@ -29,7 +29,7 @@ namespace Cosmos {
         json header(data::uint64 height);
         data::uint64 transaction_height(Gigamonkey::digest256 &txid);
         data::bytes raw_header(const Gigamonkey::digest<32> &digest) ;
-        double price(Gigamonkey::Bitcoin::timestamp timestamp);
+
         //data::list<Gigamonkey::Bitcoin::txid> transactions(const Gigamonkey::digest<32> &digest) const;
 
         //data::bytes block(const Gigamonkey::digest<32> &digest) const ;
