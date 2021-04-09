@@ -184,7 +184,7 @@ namespace Cosmos {
          //                                                                                        ledger::double_entry());
         auto doc=document.view();
         std::string data=std::string(doc["Data"].get_utf8().value);
-        auto trans=data::bytes_view(data::encoding::hex::view{data});
+        Gigamonkey::bytes trans=data::bytes_view(data::encoding::hex::view{data});
         auto ptr=std::make_shared<Gigamonkey::bytes>(trans);
         auto header=doc["Header"].get_document().view();
         auto id=header["$id"].get_oid();
