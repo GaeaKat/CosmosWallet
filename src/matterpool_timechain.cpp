@@ -4,9 +4,9 @@
 
 #include "matterpool_timechain.h"
 
-namespace Cosmos{
+namespace Cosmos::MatterPool {
 
-    data::list<Gigamonkey::Bitcoin::ledger::block_header> MatterPool_TimeChain::headers(data::uint64 since_height) const {
+    data::list<Gigamonkey::Bitcoin::ledger::block_header> TimeChain::headers(data::uint64 since_height) const {
         //auto vals=this->api.headers(since_height);
         data::list<Gigamonkey::Bitcoin::ledger::block_header> headers=api.headers(since_height);
         for(auto header:headers) {
@@ -16,7 +16,7 @@ namespace Cosmos{
         //return data::list<Gigamonkey::uint<80>>();
     }
 
-    data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> MatterPool_TimeChain::transaction(const Gigamonkey::digest<32> &txid) const {
+    data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> TimeChain::transaction(const Gigamonkey::digest<32> &txid) const {
 
         Gigamonkey::Bitcoin::ledger::double_entry dentry;
         auto cache=db.get_transaction(txid);
@@ -39,7 +39,7 @@ namespace Cosmos{
 
 
 
-    Gigamonkey::Bitcoin::ledger::block_header MatterPool_TimeChain::header(const Gigamonkey::digest<32> &digest) const {
+    Gigamonkey::Bitcoin::ledger::block_header TimeChain::header(const Gigamonkey::digest<32> &digest) const {
         auto headerOut=db[digest];
 
         if(!headerOut.valid()) {
@@ -63,21 +63,21 @@ namespace Cosmos{
     }
 
 
-    void MatterPool_TimeChain::waitForRateLimit() const {
+    void TimeChain::waitForRateLimit() const {
         long waitTime=rateLimit.getTime();
         if(waitTime > 0)
             sleep(waitTime);
     }
 
-    Gigamonkey::bytes MatterPool_TimeChain::block(const Gigamonkey::digest256 &) const {
+    Gigamonkey::bytes TimeChain::block(const Gigamonkey::digest256 &) const {
         return Gigamonkey::bytes();
     }
 
-    bool MatterPool_TimeChain::broadcast(const data::bytes_view &) {
+    bool TimeChain::broadcast(const data::bytes_view &) {
         return false;
     }
 
-    Gigamonkey::Bitcoin::ledger::block_header MatterPool_TimeChain::header(data::uint64 height) const {
+    Gigamonkey::Bitcoin::ledger::block_header TimeChain::header(data::uint64 height) const {
         auto headerOut=db[height];
 
         if(!headerOut.valid()) {
@@ -104,7 +104,7 @@ namespace Cosmos{
     }
 
     data::list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>>
-    MatterPool_TimeChain::transactions(const Gigamonkey::Bitcoin::address address) {
+    TimeChain::transactions(const Gigamonkey::Bitcoin::address address) {
         auto txids=api.transactions(address);
         data::list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>> ret;
         for(json tx : txids) {
@@ -131,7 +131,7 @@ namespace Cosmos{
         }
         return ret;
     }
-    double MatterPool_TimeChain::price(Gigamonkey::Bitcoin::timestamp timestamp) {
+    double TimeChain::price(Gigamonkey::Bitcoin::timestamp timestamp) {
         time_t rawtime=static_cast<time_t>(uint32_t(timestamp));
         struct tm * timeinfo;
         char buffer [11];
