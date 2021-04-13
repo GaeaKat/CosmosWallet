@@ -44,7 +44,7 @@ namespace Cosmos{
 
         if(!headerOut.valid()) {
             json data = api.header(digest);
-            Gigamonkey::Bitcoin::header header = data;
+            MatterPool::Header header = data;
             //header(digest256 s, Bitcoin::header h, N n, work::difficulty d) : Hash{s}, Header{h}, Height{n}, Cumulative{d} {}
             std::string diffString;
 
@@ -82,7 +82,7 @@ namespace Cosmos{
 
         if(!headerOut.valid()) {
             json data = api.header(height);
-            Gigamonkey::Bitcoin::header header = data;
+            MatterPool::Header header = data;
             //header(digest256 s, Bitcoin::header h, N n, work::difficulty d) : Hash{s}, Header{h}, Height{n}, Cumulative{d} {}
             std::string diffString;
 

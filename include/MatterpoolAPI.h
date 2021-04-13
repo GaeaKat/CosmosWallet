@@ -13,11 +13,17 @@
 #ifndef COSMOSWALLET_MATTERPOOLAPI_H
 #define COSMOSWALLET_MATTERPOOLAPI_H
 
-namespace Cosmos {
+namespace Cosmos::MatterPool {
+    
+    struct Header : Gigamonkey::Bitcoin::header {};
+    
+    void from_json(const json& j, Header& header);
+    void to_json(json& j, const Header& header);
 
-    class MatterpoolApi {
+    class Api {
     public:
-        MatterpoolApi() : rateLimit(100,60) {}
+        
+        Api() : rateLimit(100,60) {}
         data::list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) ;
         void waitForRateLimit() ;
 
@@ -28,7 +34,9 @@ namespace Cosmos {
         json header(const Gigamonkey::digest<32> &digest);
         json header(data::uint64 height);
         data::uint64 transaction_height(Gigamonkey::digest256 &txid);
-        data::bytes raw_header(const Gigamonkey::digest<32> &digest) ;
+        data::bytes raw_header(const Gigamonkey::digest<32> &digest);
+        
+        static Gigamonkey::Bitcoin::header header_from_json();
 
         //data::list<Gigamonkey::Bitcoin::txid> transactions(const Gigamonkey::digest<32> &digest) const;
 
