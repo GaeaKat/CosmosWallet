@@ -5,7 +5,7 @@
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
-    Cosmos::MatterPool_TimeChain timechain;
+    Cosmos::MatterPool::TimeChain timechain;
     Gigamonkey::digest<32> digest("0x874999FF562C52EFF5062514FF1EDD1516741C1B7A0919B49B56E427071E8081");
 
     auto tmp=timechain.transaction(digest);

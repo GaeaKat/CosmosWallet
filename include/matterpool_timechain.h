@@ -9,12 +9,12 @@
 #ifndef COSMOSWALLET_MATTERPOOL_TIMECHAIN_H
 #define COSMOSWALLET_MATTERPOOL_TIMECHAIN_H
 
-namespace Cosmos {
+namespace Cosmos::MatterPool {
     constexpr long BSV_FORK_TIMESTAMP = 1542304320;
     constexpr long CASH_FORK_TIMESTAMP = 1501593373;
-    class MatterPool_TimeChain: public Gigamonkey::Bitcoin::timechain {
+    class TimeChain: public Gigamonkey::Bitcoin::timechain {
     public:
-        MatterPool_TimeChain(): rateLimit(100,60) {}
+        TimeChain(): rateLimit(100,60) {}
         double price(Gigamonkey::Bitcoin::timestamp timestamp);
 
         data::list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) const override;
@@ -36,7 +36,7 @@ namespace Cosmos {
     private:
         mutable data::tools::rate_limiter rateLimit;
         mutable data::networking::Http http;
-        mutable MatterpoolApi api;
+        mutable MatterPool::Api api;
         mutable MongoDB_DB db;
 
     };

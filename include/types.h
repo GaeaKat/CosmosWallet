@@ -1,4 +1,5 @@
 // Copyright (c) 2021 Katrina Knight
+// Copyright (c) 2021 Daniel Krawisz
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -9,15 +10,9 @@
 #include <nlohmann/json.hpp>
 #include <gigamonkey/timechain.hpp>
 
-using nlohmann::json;
-
-namespace Gigamonkey {
-    namespace Bitcoin {
-        void from_json(const json& j, header& header);
-        void to_json(json& j, const header& header);
-    }
-}
 namespace Cosmos {
+    using json = nlohmann::json;
+    
     std::vector<char> HexToBytes(const std::string& hex);
 
     namespace BitcoinHeader {
