@@ -190,8 +190,8 @@ namespace Cosmos::Mongo {
          //                                                                                        ledger::double_entry());
         auto doc=document.view();
         string data=string(doc["Data"].get_utf8().value);
-        Gigamonkey::bytes trans=data::bytes_view(data::encoding::hex::view{data});
-        auto ptr=std::make_shared<Gigamonkey::bytes>(trans);
+        bytes trans=data::bytes_view(data::encoding::hex::view{data});
+        auto ptr=std::make_shared<bytes>(trans);
         auto header=doc["Header"].get_document().view();
         auto id=header["$id"].get_oid();
         bsoncxx::document::value filter_document =  bsoncxx::builder::stream::document{}
@@ -233,8 +233,7 @@ namespace Cosmos::Mongo {
             auto doc=maybe_result.value();
             auto entry= transaction_from_document(doc);
             return entry;
-        }
-        else {
+        } else {
             return data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(Gigamonkey::Bitcoin::txid(), Gigamonkey::Bitcoin::ledger::double_entry());
         }
     }
