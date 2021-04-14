@@ -18,15 +18,16 @@
 
 #include "types.h"
 
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
-using bsoncxx::builder::stream::open_array;
-using bsoncxx::builder::stream::open_document;
+namespace Cosmos::Mongo {
 
-namespace Cosmos {
-    class MongoDB_DB : Gigamonkey::Bitcoin::headers {
+    using bsoncxx::builder::stream::close_array;
+    using bsoncxx::builder::stream::close_document;
+    using bsoncxx::builder::stream::document;
+    using bsoncxx::builder::stream::finalize;
+    using bsoncxx::builder::stream::open_array;
+    using bsoncxx::builder::stream::open_document;
+
+    class DB : Gigamonkey::Bitcoin::headers {
     private:
         static mongocxx::instance instance;
         static bool initialized;

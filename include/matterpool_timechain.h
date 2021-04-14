@@ -35,7 +35,7 @@ namespace Cosmos::MatterPool {
         mutable data::tools::rate_limiter rateLimit;
         mutable data::networking::Http http;
         mutable MatterPool::Api api;
-        mutable MongoDB_DB db;
+        mutable Mongo::DB db;
 
     };
 }
