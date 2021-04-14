@@ -1,7 +1,11 @@
-//
-// Created by nekosune on 27/03/2021.
-//
+// Copyright (c) 2021 Katrina Knight
+// Copyright (c) 2021 Daniel Krawisz
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include "mongodb_db.h"
+#include "types.h"
+
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::make_array;
@@ -118,15 +122,15 @@ namespace Cosmos {
     Gigamonkey::Bitcoin::headers::header MongoDB_DB::from_document(bsoncxx::document::value document) const {
         Gigamonkey::Bitcoin::header header;
         auto doc=document.view();
-        std::string previousString=doc["Previous"].get_utf8().value.to_string();
+        string previousString=doc["Previous"].get_utf8().value.to_string();
         header.Previous = Gigamonkey::digest256 ("0x"+previousString);
         header.Version = doc["Version"].get_int32().value;
-        std::string markleString=doc["MerkleRoot"].get_utf8().value.to_string();
+        string markleString=doc["MerkleRoot"].get_utf8().value.to_string();
         header.MerkleRoot = Gigamonkey::digest256 ("0x"+markleString);
         header.Timestamp = Gigamonkey::Bitcoin::timestamp(doc["Timestamp"].get_int64().value);
         header.Target = Gigamonkey::Bitcoin::target(static_cast<uint32_t>(doc["Target"].get_int64().value));
         header.Nonce = static_cast<uint32_t>(doc["Nonce"].get_int64().value);
-        std::string hashString = doc["Hash"].get_utf8().value.to_string();
+        string hashString = doc["Hash"].get_utf8().value.to_string();
         Gigamonkey::digest256 hashDigest("0x"+hashString);
         Gigamonkey::N  Height = Gigamonkey::N(doc["Height"].get_double().value);
         Gigamonkey::work::difficulty diff=Gigamonkey::work::difficulty(doc["Difficulty"].get_double().value);
@@ -183,7 +187,7 @@ namespace Cosmos {
         //return data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>(Gigamonkey::digest(),
          //                                                                                        ledger::double_entry());
         auto doc=document.view();
-        std::string data=std::string(doc["Data"].get_utf8().value);
+        string data=string(doc["Data"].get_utf8().value);
         Gigamonkey::bytes trans=data::bytes_view(data::encoding::hex::view{data});
         auto ptr=std::make_shared<Gigamonkey::bytes>(trans);
         auto header=doc["Header"].get_document().view();
@@ -196,7 +200,7 @@ namespace Cosmos {
         if(!maybe_result)
             throw "Transaction without a header";
         auto db_header=from_document(maybe_result.value());
-        std::string txIdHash=doc["Hash"].get_utf8().value.to_string();
+        string txIdHash=doc["Hash"].get_utf8().value.to_string();
         auto txId=Gigamonkey::digest256 ("0x"+txIdHash);
         return data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>(txId,Gigamonkey::Bitcoin::ledger::double_entry(ptr,Gigamonkey::Merkle::proof(),db_header.Header));
     }

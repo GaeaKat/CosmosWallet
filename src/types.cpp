@@ -11,11 +11,11 @@
 #include <string>     // std::string, std::stod
 #include <iomanip>
 
-std::vector<char> Cosmos::HexToBytes(const std::string &hex) {
+std::vector<char> Cosmos::HexToBytes(const string &hex) {
     std::vector<char> bytes;
 
     for (unsigned int i = 0; i < hex.length(); i += 2) {
-        std::string byteString = hex.substr(i, 2);
+        string byteString = hex.substr(i, 2);
         char byte = (char) strtol(byteString.c_str(), NULL, 16);
         bytes.push_back(byte);
     }
