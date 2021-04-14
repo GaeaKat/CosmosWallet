@@ -19,6 +19,10 @@ namespace Cosmos {
     
     using json = nlohmann::json;
     
+    namespace Merkle {
+        using namespace Gigamonkey::Merkle;
+    }
+    
     std::vector<char> HexToBytes(const string& hex);
 
     namespace BitcoinHeader {

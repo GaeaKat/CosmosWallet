@@ -29,7 +29,7 @@ namespace Cosmos::MatterPool {
 
         data::bytes transaction(const digest256 &digest) ;
         json transactions(const Gigamonkey::Bitcoin::address address);
-        //Gigamonkey::Merkle::path merkle_path(const digest256 &digest) const;
+        //Merkle::path merkle_path(const digest256 &digest) const;
 
         json header(const digest256 &digest);
         json header(data::uint64 height);

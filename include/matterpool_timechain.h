@@ -25,9 +25,7 @@ namespace Cosmos::MatterPool {
     private:
         Gigamonkey::Bitcoin::ledger::block_header header(data::uint64 height) const ;
         void waitForRateLimit() const;
-        //Gigamonkey::Merkle::path merkle_path(const digest256 &digest) const override;
-
-
+        //Merkle::path merkle_path(const digest256 &digest) const override;
 
         //data::list<Gigamonkey::Bitcoin::txid> transactions(const digest256 &digest) const override;
 

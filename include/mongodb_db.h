@@ -46,15 +46,14 @@ namespace Cosmos {
         header operator[](const Gigamonkey::N &n) const override;
         header operator[](const digest256 &digest) const override;
 
+        [[nodiscard]] Merkle::dual dual_tree(const digest256 &digest) const override;
 
-        [[nodiscard]] Gigamonkey::Merkle::dual dual_tree(const digest256 &digest) const override;
-
-        [[nodiscard]] Gigamonkey::Merkle::proof proof(const Gigamonkey::Bitcoin::txid &txid) const override;
+        [[nodiscard]] Merkle::proof proof(const Gigamonkey::Bitcoin::txid &txid) const override;
 
         bool insert(const header &header) override;
         bool insert(const data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> &transaction);
 
-        bool insert(const Gigamonkey::Merkle::proof &proof) override;
+        bool insert(const Merkle::proof &proof) override;
     };
 }
 #endif //COSMOSWALLET_MONGODB_DB_H

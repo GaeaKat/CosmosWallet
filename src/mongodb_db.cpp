@@ -42,12 +42,12 @@ namespace Cosmos {
         }
     }
 
-    Gigamonkey::Merkle::dual MongoDB_DB::dual_tree(const digest256 &digest) const {
-        return Gigamonkey::Merkle::dual();
+    Merkle::dual MongoDB_DB::dual_tree(const digest256 &digest) const {
+        return Merkle::dual();
     }
 
-    Gigamonkey::Merkle::proof MongoDB_DB::proof(const Gigamonkey::Bitcoin::txid &txid) const {
-        return Gigamonkey::Merkle::proof();
+    Merkle::proof MongoDB_DB::proof(const Gigamonkey::Bitcoin::txid &txid) const {
+        return Merkle::proof();
     }
 
     bool MongoDB_DB::insert(const header &header) {
@@ -65,7 +65,7 @@ namespace Cosmos {
         return false;
     }
 
-    bool MongoDB_DB::insert(const Gigamonkey::Merkle::proof &proof) {
+    bool MongoDB_DB::insert(const Merkle::proof &proof) {
         return false;
     }
 
@@ -202,7 +202,7 @@ namespace Cosmos {
         auto db_header=from_document(maybe_result.value());
         string txIdHash=doc["Hash"].get_utf8().value.to_string();
         auto txId=digest256 ("0x"+txIdHash);
-        return data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>(txId,Gigamonkey::Bitcoin::ledger::double_entry(ptr,Gigamonkey::Merkle::proof(),db_header.Header));
+        return data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>(txId,Gigamonkey::Bitcoin::ledger::double_entry(ptr, Merkle::proof(), db_header.Header));
     }
 
     bool MongoDB_DB::insert(
