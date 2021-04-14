@@ -11,6 +11,10 @@
 #include <gigamonkey/timechain.hpp>
 
 namespace Cosmos {
+    
+    using digest256 = Gigamonkey::digest256;
+    using digest160 = Gigamonkey::digest160;
+    
     using json = nlohmann::json;
     
     std::vector<char> HexToBytes(const std::string& hex);

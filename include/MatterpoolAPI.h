@@ -26,20 +26,21 @@ namespace Cosmos::MatterPool {
         Api() : rateLimit(100,60) {}
         data::list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) ;
 
-        data::bytes transaction(const Gigamonkey::digest<32> &digest) ;
+        data::bytes transaction(const digest256 &digest) ;
         json transactions(const Gigamonkey::Bitcoin::address address);
-        //Gigamonkey::Merkle::path merkle_path(const Gigamonkey::digest<32> &digest) const;
+        //Gigamonkey::Merkle::path merkle_path(const digest256 &digest) const;
 
-        json header(const Gigamonkey::digest<32> &digest);
+        json header(const digest256 &digest);
         json header(data::uint64 height);
-        data::uint64 transaction_height(Gigamonkey::digest256 &txid);
-        data::bytes raw_header(const Gigamonkey::digest<32> &digest);
+        data::uint64 transaction_height(digest256 &txid);
+        data::bytes raw_header(const digest256 &digest);
         
         static Gigamonkey::Bitcoin::header header_from_json();
 
-        //data::list<Gigamonkey::Bitcoin::txid> transactions(const Gigamonkey::digest<32> &digest) const;
+        //data::list<txid> transactions(const digest256 &digest) const;
 
-        //data::bytes block(const Gigamonkey::digest<32> &digest) const ;
+        //data::bytes block(const digest256 &digest) const ;
+        
     private:
         mutable data::tools::rate_limiter rateLimit;
         mutable data::networking::Http http;
