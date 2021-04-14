@@ -42,7 +42,7 @@ namespace Cosmos {
         }
     }
 
-    Gigamonkey::Merkle::dual MongoDB_DB::dual_tree(const Gigamonkey::digest256 &digest256) const {
+    Gigamonkey::Merkle::dual MongoDB_DB::dual_tree(const digest256 &digest) const {
         return Gigamonkey::Merkle::dual();
     }
 
@@ -123,22 +123,22 @@ namespace Cosmos {
         Gigamonkey::Bitcoin::header header;
         auto doc=document.view();
         string previousString=doc["Previous"].get_utf8().value.to_string();
-        header.Previous = Gigamonkey::digest256 ("0x"+previousString);
+        header.Previous = digest256 ("0x"+previousString);
         header.Version = doc["Version"].get_int32().value;
         string markleString=doc["MerkleRoot"].get_utf8().value.to_string();
-        header.MerkleRoot = Gigamonkey::digest256 ("0x"+markleString);
+        header.MerkleRoot = digest256 ("0x"+markleString);
         header.Timestamp = Gigamonkey::Bitcoin::timestamp(doc["Timestamp"].get_int64().value);
         header.Target = Gigamonkey::Bitcoin::target(static_cast<uint32_t>(doc["Target"].get_int64().value));
         header.Nonce = static_cast<uint32_t>(doc["Nonce"].get_int64().value);
         string hashString = doc["Hash"].get_utf8().value.to_string();
-        Gigamonkey::digest256 hashDigest("0x"+hashString);
+        digest256 hashDigest("0x"+hashString);
         Gigamonkey::N  Height = Gigamonkey::N(doc["Height"].get_double().value);
         Gigamonkey::work::difficulty diff=Gigamonkey::work::difficulty(doc["Difficulty"].get_double().value);
 
         return Gigamonkey::Bitcoin::headers::header(hashDigest,header,Height,diff);
     }
 
-    Gigamonkey::Bitcoin::headers::header MongoDB_DB::operator[](const Gigamonkey::digest256 &digest) const {
+    Gigamonkey::Bitcoin::headers::header MongoDB_DB::operator[](const digest256 &digest) const {
         MongoDB_DB::initialize();
         auto hashString=data::encoding::hex::write(digest, data::endian::order::little, data::encoding::hex::letter_case::lower);
         bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
@@ -201,7 +201,7 @@ namespace Cosmos {
             throw "Transaction without a header";
         auto db_header=from_document(maybe_result.value());
         string txIdHash=doc["Hash"].get_utf8().value.to_string();
-        auto txId=Gigamonkey::digest256 ("0x"+txIdHash);
+        auto txId=digest256 ("0x"+txIdHash);
         return data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>(txId,Gigamonkey::Bitcoin::ledger::double_entry(ptr,Gigamonkey::Merkle::proof(),db_header.Header));
     }
 
@@ -222,7 +222,7 @@ namespace Cosmos {
     }
 
     data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>
-    MongoDB_DB::get_transaction(const Gigamonkey::digest256 &digest) {
+    MongoDB_DB::get_transaction(const digest256 &digest) {
         MongoDB_DB::initialize();
         auto hashString=data::encoding::hex::write(digest, data::endian::order::little, data::encoding::hex::letter_case::lower);
         bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =

@@ -16,6 +16,7 @@
 #include <bsoncxx/builder/stream/array.hpp>
 #include <gigamonkey/ledger.hpp>
 
+#include "types.h"
 
 using bsoncxx::builder::stream::close_array;
 using bsoncxx::builder::stream::close_document;
@@ -41,12 +42,12 @@ namespace Cosmos {
         [[nodiscard]] data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> transaction_from_document(bsoncxx::document::value document) const;
     public:
         [[nodiscard]] header latest() const override;
-        data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> get_transaction(const Gigamonkey::digest256 &digest);
+        data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> get_transaction(const digest256 &digest);
         header operator[](const Gigamonkey::N &n) const override;
-        header operator[](const Gigamonkey::digest256 &digest) const override;
+        header operator[](const digest256 &digest) const override;
 
 
-        [[nodiscard]] Gigamonkey::Merkle::dual dual_tree(const Gigamonkey::digest256 &digest256) const override;
+        [[nodiscard]] Gigamonkey::Merkle::dual dual_tree(const digest256 &digest) const override;
 
         [[nodiscard]] Gigamonkey::Merkle::proof proof(const Gigamonkey::Bitcoin::txid &txid) const override;
 
