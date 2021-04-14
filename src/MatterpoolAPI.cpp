@@ -79,8 +79,8 @@ namespace Cosmos::MatterPool {
 
     }
 
-    data::list<Gigamonkey::Bitcoin::ledger::block_header> Api::headers(data::uint64 since_height){
-        auto ret=data::list<Gigamonkey::Bitcoin::headers::header>();
+    list<Gigamonkey::Bitcoin::ledger::block_header> Api::headers(data::uint64 since_height){
+        auto ret=list<Gigamonkey::Bitcoin::headers::header>();
         int i=0;
         json jOutput;
         do {
@@ -99,7 +99,7 @@ namespace Cosmos::MatterPool {
 
                 headerData["height"].get_to(heightString);
 
-                data::math::number::gmp::N height(heightString);
+                N height(heightString);
                 string hashString;
                 headerData["hash"].get_to(hashString);
                 digest256 digest("0x"+hashString);

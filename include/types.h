@@ -21,6 +21,10 @@ namespace Cosmos {
     
     using json = nlohmann::json;
     
+    template <typename X> using list = data::list<X>;
+    
+    using N = Gigamonkey::N;
+    
     namespace Merkle {
         using namespace Gigamonkey::Merkle;
     }

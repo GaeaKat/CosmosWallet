@@ -44,7 +44,7 @@ namespace Cosmos::Mongo {
     public:
         [[nodiscard]] header latest() const override;
         data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> get_transaction(const digest256 &digest);
-        header operator[](const Gigamonkey::N &n) const override;
+        header operator[](const N &n) const override;
         header operator[](const digest256 &digest) const override;
 
         [[nodiscard]] Merkle::dual dual_tree(const digest256 &digest) const override;

@@ -17,17 +17,17 @@ namespace Cosmos::MatterPool {
         TimeChain(): rateLimit(100,60) {}
         double price(Gigamonkey::Bitcoin::timestamp timestamp);
 
-        data::list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) const override;
+        list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) const override;
 
         data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> transaction(const digest256 &txid) const override;
         Gigamonkey::Bitcoin::ledger::block_header header(const digest256 &digest) const override;
-        data::list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>> transactions(const Gigamonkey::Bitcoin::address address);
+        list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>> transactions(const Gigamonkey::Bitcoin::address address);
     private:
         Gigamonkey::Bitcoin::ledger::block_header header(data::uint64 height) const ;
         void waitForRateLimit() const;
         //Merkle::path merkle_path(const digest256 &digest) const override;
 
-        //data::list<Gigamonkey::Bitcoin::txid> transactions(const digest256 &digest) const override;
+        //list<Gigamonkey::Bitcoin::txid> transactions(const digest256 &digest) const override;
 
         bytes block(const digest256&) const override;
         bool broadcast(const data::bytes_view&) override;
