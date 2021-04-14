@@ -25,7 +25,6 @@ namespace Cosmos::MatterPool {
         
         Api() : rateLimit(100,60) {}
         data::list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) ;
-        void waitForRateLimit() ;
 
         data::bytes transaction(const Gigamonkey::digest<32> &digest) ;
         json transactions(const Gigamonkey::Bitcoin::address address);
@@ -44,6 +43,8 @@ namespace Cosmos::MatterPool {
     private:
         mutable data::tools::rate_limiter rateLimit;
         mutable data::networking::Http http;
+        
+        void waitForRateLimit();
     };
 }
 #endif //COSMOSWALLET_MATTERPOOLAPI_H
