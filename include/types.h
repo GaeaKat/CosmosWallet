@@ -15,9 +15,11 @@ namespace Cosmos {
     using digest256 = Gigamonkey::digest256;
     using digest160 = Gigamonkey::digest160;
     
+    using string = std::string;
+    
     using json = nlohmann::json;
     
-    std::vector<char> HexToBytes(const std::string& hex);
+    std::vector<char> HexToBytes(const string& hex);
 
     namespace BitcoinHeader {
         struct BitcoinHeader {
@@ -32,13 +34,11 @@ namespace Cosmos {
             long double difficulty;
             char prev_block[32];
             char next_block[32];
-            std::string coinbase_info;
-            std::string coinbase_txid;
+            string coinbase_info;
+            string coinbase_txid;
             char chain_work[32];
 
         };
-
-
 
     }
 

@@ -46,7 +46,7 @@ namespace Cosmos::MatterPool {
             json data = api.header(digest);
             MatterPool::Header header = data;
             //header(digest256 s, Bitcoin::header h, N n, work::difficulty d) : Hash{s}, Header{h}, Height{n}, Cumulative{d} {}
-            std::string diffString;
+            string diffString;
 
             data["difficulty"].get_to(diffString);
             Gigamonkey::work::difficulty diff(stod(diffString));
@@ -84,7 +84,7 @@ namespace Cosmos::MatterPool {
             json data = api.header(height);
             MatterPool::Header header = data;
             //header(digest256 s, Bitcoin::header h, N n, work::difficulty d) : Hash{s}, Header{h}, Height{n}, Cumulative{d} {}
-            std::string diffString;
+            string diffString;
 
             data["difficulty"].get_to(diffString);
             Gigamonkey::work::difficulty diff(stod(diffString));
@@ -93,7 +93,7 @@ namespace Cosmos::MatterPool {
             data["height"].get_to(heightString);
 
             data::math::number::gmp::N height(heightString);
-            std::string hashString;
+            string hashString;
             data["hash"].get_to(hashString);
             digest256 digest("0x"+hashString);
             headerOut=Gigamonkey::Bitcoin::ledger::block_header(digest, header, height, diff);
@@ -109,7 +109,7 @@ namespace Cosmos::MatterPool {
         data::list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>> ret;
         for(json tx : txids) {
             Gigamonkey::Bitcoin::ledger::double_entry dentry;
-            std::string txString;
+            string txString;
             tx["txid"].get_to(txString);
             digest256 txid("0x"+txString);
             auto cache=db.get_transaction(txid);
@@ -140,18 +140,18 @@ namespace Cosmos::MatterPool {
 
         strftime (buffer,11,"%d-%m-%Y",timeinfo);
         waitForRateLimit();
-        std::string output;
+        string output;
         if(((long)timestamp) > BSV_FORK_TIMESTAMP) {
             output = this->http.GET("api.coingecko.com",
-                                    "/api/v3/coins/bitcoin-cash-sv/history?date=" + std::string(buffer));
+                                    "/api/v3/coins/bitcoin-cash-sv/history?date=" + string(buffer));
         } else if(((long)timestamp) > CASH_FORK_TIMESTAMP) {
             output = this->http.GET("api.coingecko.com",
-                                    "/api/v3/coins/bitcoin-cash/history?date=" + std::string(buffer));
+                                    "/api/v3/coins/bitcoin-cash/history?date=" + string(buffer));
         }
         else {
             // bitcoin
             output = this->http.GET("api.coingecko.com",
-                                    "/api/v3/coins/bitcoin/history?date=" + std::string(buffer));
+                                    "/api/v3/coins/bitcoin/history?date=" + string(buffer));
         }
         try {
             json jOutput = json::parse(output);
