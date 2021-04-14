@@ -102,7 +102,7 @@ namespace Cosmos::MatterPool {
                 data::math::number::gmp::N height(heightString);
                 std::string hashString;
                 headerData["hash"].get_to(hashString);
-                Gigamonkey::digest256 digest("0x"+hashString);
+                digest256 digest("0x"+hashString);
                 auto headerOut=Gigamonkey::Bitcoin::ledger::block_header(digest, header, height, diff);
                 ret=ret << headerOut;
             }
@@ -118,7 +118,7 @@ namespace Cosmos::MatterPool {
             sleep(waitTime);
     }
 
-    data::bytes Api::transaction(const Gigamonkey::digest<32> &digest)   {
+    data::bytes Api::transaction(const digest256 &digest)   {
         auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         std::string output=http.GET("media.bitcoinfiles.org","/tx/"+ tmp+"/raw");
@@ -128,7 +128,7 @@ namespace Cosmos::MatterPool {
         return data::bytes_view(data::encoding::hex::view{output});
     }
 
-    json Api::header(const Gigamonkey::digest<32> &digest) {
+    json Api::header(const digest256 &digest) {
         auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         std::string output=this->http.GET("txdb.mattercloud.io","/api/v1/blockheader/"+ tmp+"?limit=1&order=asc");
@@ -136,7 +136,7 @@ namespace Cosmos::MatterPool {
         return jOutput["result"][0];
     }
 
-    data::bytes Api::raw_header(const Gigamonkey::digest<32> &digest) {
+    data::bytes Api::raw_header(const digest256 &digest) {
         auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         std::string output=http.GET("media.bitcoinfiles.org","/rawblockheader/"+ tmp);
@@ -154,15 +154,13 @@ namespace Cosmos::MatterPool {
         return jOutput["result"][0];
     }
 
-    data::uint64 Api::transaction_height(Gigamonkey::digest256 &txid) {
+    data::uint64 Api::transaction_height(digest256 &txid) {
         auto tmp=data::encoding::hex::write(txid,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         std::string output=this->http.GET("txdb.mattercloud.io","/api/v1/txblock/"+ tmp);
         json jOutput=json::parse(output);
         return jOutput["result"][0]["height"];
     }
-
-
 
     json Api::transactions(const Gigamonkey::Bitcoin::address address) {
         auto tmp=address.write();
