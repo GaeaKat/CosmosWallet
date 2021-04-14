@@ -18,15 +18,16 @@
 
 #include "types.h"
 
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
-using bsoncxx::builder::stream::open_array;
-using bsoncxx::builder::stream::open_document;
+namespace Cosmos::Mongo {
 
-namespace Cosmos {
-    class MongoDB_DB : Gigamonkey::Bitcoin::headers {
+    using bsoncxx::builder::stream::close_array;
+    using bsoncxx::builder::stream::close_document;
+    using bsoncxx::builder::stream::document;
+    using bsoncxx::builder::stream::finalize;
+    using bsoncxx::builder::stream::open_array;
+    using bsoncxx::builder::stream::open_document;
+
+    class DB : Gigamonkey::Bitcoin::headers {
     private:
         static mongocxx::instance instance;
         static bool initialized;
@@ -46,15 +47,14 @@ namespace Cosmos {
         header operator[](const Gigamonkey::N &n) const override;
         header operator[](const digest256 &digest) const override;
 
+        [[nodiscard]] Merkle::dual dual_tree(const digest256 &digest) const override;
 
-        [[nodiscard]] Gigamonkey::Merkle::dual dual_tree(const digest256 &digest) const override;
-
-        [[nodiscard]] Gigamonkey::Merkle::proof proof(const Gigamonkey::Bitcoin::txid &txid) const override;
+        [[nodiscard]] Merkle::proof proof(const Gigamonkey::Bitcoin::txid &txid) const override;
 
         bool insert(const header &header) override;
         bool insert(const data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> &transaction);
 
-        bool insert(const Gigamonkey::Merkle::proof &proof) override;
+        bool insert(const Merkle::proof &proof) override;
     };
 }
 #endif //COSMOSWALLET_MONGODB_DB_H

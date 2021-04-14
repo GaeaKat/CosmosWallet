@@ -27,7 +27,7 @@ namespace Cosmos::MatterPool {
         auto height=api.transaction_height(const_cast<digest256 &>(txid));
         auto header=this->header(height);
         if(header.valid()) {
-            auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Gigamonkey::Merkle::proof(), header.Header));
+            auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Merkle::proof(), header.Header));
             db.insert(entry);
             return entry;
         }
@@ -123,7 +123,7 @@ namespace Cosmos::MatterPool {
             tx["height"].get_to(height);
             auto header=this->header(height);
             if(header.valid()) {
-                auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Gigamonkey::Merkle::proof(), header.Header));
+                auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Merkle::proof(), header.Header));
                 db.insert(entry);
                 ret = ret << entry;
             }
