@@ -25,7 +25,7 @@ namespace Cosmos::MatterPool {
     public:
         
         Api() : rateLimit(100,60) {}
-        data::list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) ;
+        list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) ;
 
         bytes transaction(const digest256 &digest) ;
         json transactions(const Gigamonkey::Bitcoin::address address);

@@ -30,7 +30,7 @@ namespace Cosmos::Mongo {
         return Gigamonkey::Bitcoin::headers::header();
     }
 
-    Gigamonkey::Bitcoin::headers::header DB::operator[](const Gigamonkey::N &n) const {
+    Gigamonkey::Bitcoin::headers::header DB::operator[](const N &n) const {
         initialize();
         bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
                 headers_collection.find_one(document{} << "Height" << (double)n << finalize);

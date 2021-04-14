@@ -6,14 +6,14 @@
 
 namespace Cosmos::MatterPool {
 
-    data::list<Gigamonkey::Bitcoin::ledger::block_header> TimeChain::headers(data::uint64 since_height) const {
+    list<Gigamonkey::Bitcoin::ledger::block_header> TimeChain::headers(data::uint64 since_height) const {
         //auto vals=this->api.headers(since_height);
-        data::list<Gigamonkey::Bitcoin::ledger::block_header> headers=api.headers(since_height);
+        list<Gigamonkey::Bitcoin::ledger::block_header> headers=api.headers(since_height);
         for(auto header:headers) {
             db.insert(header);
         }
         return headers;
-        //return data::list<Gigamonkey::uint<80>>();
+        //return list<Gigamonkey::uint<80>>();
     }
 
     data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> TimeChain::transaction(const digest256 &txid) const {
@@ -103,10 +103,10 @@ namespace Cosmos::MatterPool {
         return headerOut;
     }
 
-    data::list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>>
+    list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>>
     TimeChain::transactions(const Gigamonkey::Bitcoin::address address) {
         auto txids=api.transactions(address);
-        data::list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>> ret;
+        list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>> ret;
         for(json tx : txids) {
             Gigamonkey::Bitcoin::ledger::double_entry dentry;
             string txString;
