@@ -32,10 +32,9 @@ namespace Cosmos::MatterPool {
 
         json header(const digest256 &digest);
         json header(data::uint64 height);
+        
         data::uint64 transaction_height(digest256 &txid);
         data::bytes raw_header(const digest256 &digest);
-        
-        static Gigamonkey::Bitcoin::header header_from_json();
 
         //data::list<txid> transactions(const digest256 &digest) const;
 
