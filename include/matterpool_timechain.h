@@ -29,8 +29,8 @@ namespace Cosmos::MatterPool {
 
         //data::list<Gigamonkey::Bitcoin::txid> transactions(const digest256 &digest) const override;
 
-        Gigamonkey::bytes block(const digest256&) const override;
-        bool broadcast(const Gigamonkey::bytes_view&) override;
+        bytes block(const digest256&) const override;
+        bool broadcast(const data::bytes_view&) override;
     private:
         mutable data::tools::rate_limiter rateLimit;
         mutable data::networking::Http http;

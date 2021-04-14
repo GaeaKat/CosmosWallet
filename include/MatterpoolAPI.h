@@ -27,7 +27,7 @@ namespace Cosmos::MatterPool {
         Api() : rateLimit(100,60) {}
         data::list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) ;
 
-        data::bytes transaction(const digest256 &digest) ;
+        bytes transaction(const digest256 &digest) ;
         json transactions(const Gigamonkey::Bitcoin::address address);
         //Merkle::path merkle_path(const digest256 &digest) const;
 
@@ -35,11 +35,11 @@ namespace Cosmos::MatterPool {
         json header(data::uint64 height);
         
         data::uint64 transaction_height(digest256 &txid);
-        data::bytes raw_header(const digest256 &digest);
+        bytes raw_header(const digest256 &digest);
 
         //data::list<txid> transactions(const digest256 &digest) const;
 
-        //data::bytes block(const digest256 &digest) const ;
+        //bytes block(const digest256 &digest) const ;
         
     private:
         mutable data::tools::rate_limiter rateLimit;

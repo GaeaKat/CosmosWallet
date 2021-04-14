@@ -15,6 +15,8 @@ namespace Cosmos {
     using digest256 = Gigamonkey::digest256;
     using digest160 = Gigamonkey::digest160;
     
+    using bytes = data::bytes;
+    
     using string = std::string;
     
     using json = nlohmann::json;

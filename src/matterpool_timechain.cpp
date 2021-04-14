@@ -23,7 +23,7 @@ namespace Cosmos::MatterPool {
         if(cache.Key!=Gigamonkey::Bitcoin::txid())
             return cache;
         auto trans=api.transaction(txid);
-        auto ptr=std::make_shared<Gigamonkey::bytes>(trans);
+        auto ptr=std::make_shared<bytes>(trans);
         auto height=api.transaction_height(const_cast<digest256 &>(txid));
         auto header=this->header(height);
         if(header.valid()) {
@@ -69,8 +69,8 @@ namespace Cosmos::MatterPool {
             sleep(waitTime);
     }
 
-    Gigamonkey::bytes TimeChain::block(const digest256 &) const {
-        return Gigamonkey::bytes();
+    bytes TimeChain::block(const digest256 &) const {
+        return bytes();
     }
 
     bool TimeChain::broadcast(const data::bytes_view &) {
@@ -118,7 +118,7 @@ namespace Cosmos::MatterPool {
                 continue;
             }
             auto trans=api.transaction(txid);
-            auto ptr=std::make_shared<Gigamonkey::bytes>(trans);
+            auto ptr=std::make_shared<bytes>(trans);
             uint64_t height;
             tx["height"].get_to(height);
             auto header=this->header(height);
