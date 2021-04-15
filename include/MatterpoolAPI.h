@@ -16,28 +16,28 @@
 
 namespace Cosmos::MatterPool {
     
-    struct Header : Gigamonkey::Bitcoin::header {};
+    struct Header : header {};
     
-    void from_json(const json& j, Header& header);
-    void to_json(json& j, const Header& header);
+    void from_json(const json&, Header&);
+    void to_json(json&, const Header&);
 
     class Api {
     public:
         
         Api() : rateLimit(100,60) {}
-        list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) ;
+        list<ledger::block_header> headers(uint64 since_height) ;
 
-        bytes transaction(const digest256 &digest) ;
-        json transactions(const Gigamonkey::Bitcoin::address address);
+        bytes transaction(const digest256 &) ;
+        json transactions(const address &);
         //Merkle::path merkle_path(const digest256 &digest) const;
 
-        json header(const digest256 &digest);
-        json header(data::uint64 height);
+        json header(const digest256 &);
+        json header(uint64 height);
         
-        data::uint64 transaction_height(digest256 &txid);
+        uint64 transaction_height(digest256 &txid);
         bytes raw_header(const digest256 &digest);
 
-        //data::list<txid> transactions(const digest256 &digest) const;
+        //list<txid> transactions(const digest256 &digest) const;
 
         //bytes block(const digest256 &digest) const ;
         
