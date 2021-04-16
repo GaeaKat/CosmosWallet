@@ -9,8 +9,13 @@
 #include <cstdint>
 #include <nlohmann/json.hpp>
 #include <gigamonkey/timechain.hpp>
+#include <gigamonkey/boost/boost.hpp>
 
 namespace Cosmos {
+    using namespace Gigamonkey::Bitcoin;
+    
+    using uint64 = data::uint64;
+    using uint32 = data::uint32;
     
     using digest256 = Gigamonkey::digest256;
     using digest160 = Gigamonkey::digest160;
@@ -25,11 +30,15 @@ namespace Cosmos {
     
     using N = Gigamonkey::N;
     
+    template <typename X> using ptr = std::shared_ptr<X>;
+    
     namespace Merkle {
         using namespace Gigamonkey::Merkle;
     }
     
-    template <typename X> using ptr = std::shared_ptr<X>;
+    namespace Boost {
+        using namespace Gigamonkey::Boost;
+    }
     
     std::vector<char> HexToBytes(const string& hex);
 

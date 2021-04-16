@@ -6,9 +6,9 @@
 
 namespace Cosmos::MatterPool {
 
-    list<Gigamonkey::Bitcoin::ledger::block_header> TimeChain::headers(data::uint64 since_height) {
+    list<ledger::block_header> TimeChain::headers(uint64 since_height) {
         //auto vals=this->api.headers(since_height);
-        list<Gigamonkey::Bitcoin::ledger::block_header> headers=api.headers(since_height);
+        list<ledger::block_header> headers=api.headers(since_height);
         for(auto header:headers) {
             db.insert(header);
         }
@@ -16,30 +16,28 @@ namespace Cosmos::MatterPool {
         //return list<Gigamonkey::uint<80>>();
     }
 
-    data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> TimeChain::transaction(const digest256 &txid) const {
+    data::entry<txid, ledger::double_entry> TimeChain::transaction(const txid &id) const {
 
-        Gigamonkey::Bitcoin::ledger::double_entry dentry;
-        auto cache=db.get_transaction(txid);
-        if(cache.Key!=Gigamonkey::Bitcoin::txid())
+        ledger::double_entry dentry;
+        auto cache=db.get_transaction(id);
+        if(cache.Key!=txid())
             return cache;
-        auto trans=api.transaction(txid);
+        auto trans=api.transaction(id);
         auto ptr=std::make_shared<bytes>(trans);
-        auto height=api.transaction_height(const_cast<digest256 &>(txid));
+        auto height=api.transaction_height(const_cast<digest256 &>(id));
         auto header=this->header(height);
         if(header.valid()) {
-            auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Merkle::proof(), header.Header));
+            auto entry=data::entry<txid, ledger::double_entry>(id, ledger::double_entry(ptr, Merkle::proof(), header.Header));
             db.insert(entry);
             return entry;
         }
-        auto tmp=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry());
+        auto tmp=data::entry<txid, ledger::double_entry>(id, ledger::double_entry());
 
         return tmp;
 
     }
 
-
-
-    Gigamonkey::Bitcoin::ledger::block_header TimeChain::header(const digest256 &digest) const {
+    ledger::block_header TimeChain::header(const digest256 &digest) const {
         auto headerOut=db[digest];
 
         if(!headerOut.valid()) {
@@ -55,7 +53,7 @@ namespace Cosmos::MatterPool {
             data["height"].get_to(heightString);
 
             data::math::number::gmp::N height(heightString);
-            headerOut=Gigamonkey::Bitcoin::ledger::block_header(digest, header, height, diff);
+            headerOut=ledger::block_header(digest, header, height, diff);
 
             db.insert(headerOut);
         }
@@ -77,7 +75,7 @@ namespace Cosmos::MatterPool {
         return false;
     }
 
-    Gigamonkey::Bitcoin::ledger::block_header TimeChain::header(data::uint64 height) const {
+    ledger::block_header TimeChain::header(data::uint64 height) const {
         auto headerOut=db[height];
 
         if(!headerOut.valid()) {
@@ -96,34 +94,36 @@ namespace Cosmos::MatterPool {
             string hashString;
             data["hash"].get_to(hashString);
             digest256 digest("0x"+hashString);
-            headerOut=Gigamonkey::Bitcoin::ledger::block_header(digest, header, height, diff);
+            headerOut=ledger::block_header(digest, header, height, diff);
 
             db.insert(headerOut);
         }
         return headerOut;
     }
 
-    list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>>
-    TimeChain::transactions(const Gigamonkey::Bitcoin::address address) {
-        auto txids=api.transactions(address);
-        list<data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>> ret;
+    list<data::entry<txid, ledger::double_entry>>
+    TimeChain::transactions(const address &a) {
+        auto txids=api.transactions(a);
+        list<data::entry<txid, ledger::double_entry>> ret;
         for(json tx : txids) {
-            Gigamonkey::Bitcoin::ledger::double_entry dentry;
+            ledger::double_entry dentry;
             string txString;
             tx["txid"].get_to(txString);
-            digest256 txid("0x"+txString);
-            auto cache=db.get_transaction(txid);
-            if(cache.Key!=Gigamonkey::Bitcoin::txid()) {
+            digest256 id("0x"+txString);
+            auto cache=db.get_transaction(id);
+            
+            if(cache.Key != txid()) {
                 ret = ret << cache;
                 continue;
             }
-            auto trans=api.transaction(txid);
+            
+            auto trans=api.transaction(id);
             auto ptr=std::make_shared<bytes>(trans);
             uint64_t height;
             tx["height"].get_to(height);
             auto header=this->header(height);
             if(header.valid()) {
-                auto entry=data::entry<Gigamonkey::Bitcoin::txid,Gigamonkey::Bitcoin::ledger::double_entry>(txid, Gigamonkey::Bitcoin::ledger::double_entry(ptr, Merkle::proof(), header.Header));
+                auto entry=data::entry<txid, ledger::double_entry>(id, ledger::double_entry(ptr, Merkle::proof(), header.Header));
                 db.insert(entry);
                 ret = ret << entry;
             }
@@ -132,8 +132,8 @@ namespace Cosmos::MatterPool {
         return ret;
     }
     
-    double TimeChain::price(Gigamonkey::Bitcoin::timestamp timestamp) {
-        time_t rawtime=static_cast<time_t>(uint32_t(timestamp));
+    double TimeChain::price(timestamp t) {
+        time_t rawtime=static_cast<time_t>(uint32_t(t));
         struct tm * timeinfo;
         char buffer [11];
         timeinfo = localtime (&rawtime);
@@ -141,10 +141,10 @@ namespace Cosmos::MatterPool {
         strftime (buffer,11,"%d-%m-%Y",timeinfo);
         waitForRateLimit();
         string output;
-        if(((long)timestamp) > BSV_FORK_TIMESTAMP) {
+        if(((long)t) > BSV_FORK_TIMESTAMP) {
             output = this->http.GET("api.coingecko.com",
                                     "/api/v3/coins/bitcoin-cash-sv/history?date=" + string(buffer));
-        } else if(((long)timestamp) > CASH_FORK_TIMESTAMP) {
+        } else if(((long)t) > CASH_FORK_TIMESTAMP) {
             output = this->http.GET("api.coingecko.com",
                                     "/api/v3/coins/bitcoin-cash/history?date=" + string(buffer));
         }

@@ -7,35 +7,33 @@
 
 namespace Cosmos::MatterPool {
     
-    void from_json(const json &j, Header &header) {
-        using namespace Gigamonkey;
-        using namespace data;
+    void from_json(const json &j, Header &h) {
         
         uint32 version;
         j.at("version").get_to(version);
-        header.Version=version;
+        h.Version=version;
         string merkle;
         j.at("merkleroot").get_to(merkle);
         digest256 tmp("0x"+merkle);
-        header.MerkleRoot=tmp;
+        h.MerkleRoot=tmp;
         uint32 nonce;
         j.at("nonce").get_to(nonce);
-        header.Nonce=nonce;
+        h.Nonce=nonce;
         string previous;
         j.at("previousblockhash").get_to(previous);
         digest256 previousTmp("0x"+previous);
-        header.Previous=previousTmp;
+        h.Previous=previousTmp;
         uint32 tmpTimestamp;
         j.at("time").get_to(tmpTimestamp);
 
-        header.Timestamp=Gigamonkey::Bitcoin::timestamp(tmpTimestamp);
+        h.Timestamp=timestamp(tmpTimestamp);
         string target;
         j.at("bits").get_to(target);
         unsigned int x;
         std::stringstream ss;
         ss << std::hex << target;
         ss >> x;
-        header.Target=Gigamonkey::work::compact(x);
+        h.Target=Gigamonkey::work::compact(x);
 
         /*j.at("height").get_to(header.height);
 
@@ -79,8 +77,8 @@ namespace Cosmos::MatterPool {
 
     }
 
-    list<Gigamonkey::Bitcoin::ledger::block_header> Api::headers(data::uint64 since_height){
-        auto ret=list<Gigamonkey::Bitcoin::headers::header>();
+    list<ledger::block_header> Api::headers(data::uint64 since_height){
+        auto ret=list<headers::header>();
         int i=0;
         json jOutput;
         do {
@@ -103,7 +101,7 @@ namespace Cosmos::MatterPool {
                 string hashString;
                 headerData["hash"].get_to(hashString);
                 digest256 digest("0x"+hashString);
-                auto headerOut=Gigamonkey::Bitcoin::ledger::block_header(digest, header, height, diff);
+                auto headerOut=ledger::block_header(digest, header, height, diff);
                 ret=ret << headerOut;
             }
 
@@ -142,7 +140,7 @@ namespace Cosmos::MatterPool {
         return hex == nullptr ? bytes{} : *hex;
     }
 
-    json Api::header(data::uint64 height) {
+    json Api::header(uint64 height) {
 
         waitForRateLimit();
         string output=this->http.GET("txdb.mattercloud.io","/api/v1/blockheader/"+ std::to_string(height)+"?limit=1&order=asc");
@@ -150,7 +148,7 @@ namespace Cosmos::MatterPool {
         return jOutput["result"][0];
     }
 
-    data::uint64 Api::transaction_height(digest256 &txid) {
+    uint64 Api::transaction_height(digest256 &txid) {
         auto tmp=data::encoding::hex::write(txid,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         string output=this->http.GET("txdb.mattercloud.io","/api/v1/txblock/"+ tmp);
@@ -158,10 +156,9 @@ namespace Cosmos::MatterPool {
         return jOutput["result"][0]["height"];
     }
 
-    json Api::transactions(const Gigamonkey::Bitcoin::address address) {
-        auto tmp=address.write();
+    json Api::transactions(const address &a) {
         waitForRateLimit();
-        string output=this->http.GET("txdb.mattercloud.io","/api/v1/txout/address/history/"+tmp);
+        string output=http.GET("txdb.mattercloud.io","/api/v1/txout/address/history/"+a.write());
         json jOutput=json::parse(output);
         return jOutput["result"];
     }
