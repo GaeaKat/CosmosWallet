@@ -17,7 +17,7 @@ namespace Cosmos::MatterPool {
         TimeChain(): rateLimit(100,60) {}
         double price(Gigamonkey::Bitcoin::timestamp timestamp);
 
-        list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) const override;
+        list<Gigamonkey::Bitcoin::ledger::block_header> headers(data::uint64 since_height) override;
 
         data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> transaction(const digest256 &txid) const override;
         Gigamonkey::Bitcoin::ledger::block_header header(const digest256 &digest) const override;

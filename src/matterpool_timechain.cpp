@@ -6,7 +6,7 @@
 
 namespace Cosmos::MatterPool {
 
-    list<Gigamonkey::Bitcoin::ledger::block_header> TimeChain::headers(data::uint64 since_height) const {
+    list<Gigamonkey::Bitcoin::ledger::block_header> TimeChain::headers(data::uint64 since_height) {
         //auto vals=this->api.headers(since_height);
         list<Gigamonkey::Bitcoin::ledger::block_header> headers=api.headers(since_height);
         for(auto header:headers) {
