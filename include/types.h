@@ -29,6 +29,8 @@ namespace Cosmos {
         using namespace Gigamonkey::Merkle;
     }
     
+    template <typename X> using ptr = std::shared_ptr<X>;
+    
     std::vector<char> HexToBytes(const string& hex);
 
     namespace BitcoinHeader {

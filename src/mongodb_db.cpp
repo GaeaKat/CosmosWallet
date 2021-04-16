@@ -190,7 +190,7 @@ namespace Cosmos::Mongo {
          //                                                                                        ledger::double_entry());
         auto doc=document.view();
         string data=string(doc["Data"].get_utf8().value);
-        bytes trans=data::bytes_view(data::encoding::hex::view{data});
+        bytes trans = *data::encoding::hex::read(data);
         auto ptr=std::make_shared<bytes>(trans);
         auto header=doc["Header"].get_document().view();
         auto id=header["$id"].get_oid();

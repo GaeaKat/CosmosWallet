@@ -122,10 +122,8 @@ namespace Cosmos::MatterPool {
         auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         string output=http.GET("media.bitcoinfiles.org","/tx/"+ tmp+"/raw");
-        //std::cout << output << std::endl;
-        if(output=="{}")
-            return bytes();
-        return data::bytes_view(data::encoding::hex::view{output});
+        ptr<bytes> hex = data::encoding::hex::read(output);
+        return hex == nullptr ? bytes{} : *hex;
     }
 
     json Api::header(const digest256 &digest) {
@@ -140,10 +138,8 @@ namespace Cosmos::MatterPool {
         auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         string output=http.GET("media.bitcoinfiles.org","/rawblockheader/"+ tmp);
-        //std::cout << output << std::endl;
-        //if(output=="{ }")
-        //    return bytes();
-        return data::bytes_view(data::encoding::hex::view{output});
+        ptr<bytes> hex = data::encoding::hex::read(output);
+        return hex == nullptr ? bytes{} : *hex;
     }
 
     json Api::header(data::uint64 height) {
