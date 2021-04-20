@@ -83,7 +83,7 @@ namespace Cosmos::MatterPool {
         json jOutput;
         do {
             waitForRateLimit();
-            string output=this->http.GET("txdb.mattercloud.io","/api/v1/blockheader/"+ std::to_string(since_height+(1000*i))+"?limit=1000&order=asc");
+            string output=http->GET("txdb.mattercloud.io","/api/v1/blockheader/"+ std::to_string(since_height+(1000*i))+"?limit=1000&order=asc");
             i++;
             jOutput=json::parse(output);
             for(json headerData : jOutput["result"]) {
@@ -119,7 +119,7 @@ namespace Cosmos::MatterPool {
     bytes Api::transaction(const digest256 &digest)   {
         auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
-        string output=http.GET("media.bitcoinfiles.org","/tx/"+ tmp+"/raw");
+        string output=http->GET("media.bitcoinfiles.org","/tx/"+ tmp+"/raw");
         ptr<bytes> hex = data::encoding::hex::read(output);
         return hex == nullptr ? bytes{} : *hex;
     }
@@ -127,7 +127,7 @@ namespace Cosmos::MatterPool {
     json Api::header(const digest256 &digest) {
         auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
-        string output=this->http.GET("txdb.mattercloud.io","/api/v1/blockheader/"+ tmp+"?limit=1&order=asc");
+        string output=http->GET("txdb.mattercloud.io","/api/v1/blockheader/"+ tmp+"?limit=1&order=asc");
         json jOutput=json::parse(output);
         return jOutput["result"][0];
     }
@@ -135,7 +135,7 @@ namespace Cosmos::MatterPool {
     bytes Api::raw_header(const digest256 &digest) {
         auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
-        string output=http.GET("media.bitcoinfiles.org","/rawblockheader/"+ tmp);
+        string output=http->GET("media.bitcoinfiles.org","/rawblockheader/"+ tmp);
         ptr<bytes> hex = data::encoding::hex::read(output);
         return hex == nullptr ? bytes{} : *hex;
     }
@@ -143,7 +143,7 @@ namespace Cosmos::MatterPool {
     json Api::header(uint64 height) {
 
         waitForRateLimit();
-        string output=this->http.GET("txdb.mattercloud.io","/api/v1/blockheader/"+ std::to_string(height)+"?limit=1&order=asc");
+        string output=http->GET("txdb.mattercloud.io","/api/v1/blockheader/"+ std::to_string(height)+"?limit=1&order=asc");
         json jOutput=json::parse(output);
         return jOutput["result"][0];
     }
@@ -151,14 +151,14 @@ namespace Cosmos::MatterPool {
     uint64 Api::transaction_height(digest256 &txid) {
         auto tmp=data::encoding::hex::write(txid,data::endian::order::little,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
-        string output=this->http.GET("txdb.mattercloud.io","/api/v1/txblock/"+ tmp);
+        string output=http->GET("txdb.mattercloud.io","/api/v1/txblock/"+ tmp);
         json jOutput=json::parse(output);
         return jOutput["result"][0]["height"];
     }
 
     json Api::transactions(const address &a) {
         waitForRateLimit();
-        string output=http.GET("txdb.mattercloud.io","/api/v1/txout/address/history/"+a.write());
+        string output=http->GET("txdb.mattercloud.io","/api/v1/txout/address/history/"+a.write());
         json jOutput=json::parse(output);
         return jOutput["result"];
     }

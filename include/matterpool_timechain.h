@@ -12,9 +12,10 @@
 namespace Cosmos::MatterPool {
     constexpr long BSV_FORK_TIMESTAMP = 1542304320;
     constexpr long CASH_FORK_TIMESTAMP = 1501593373;
+    
     class TimeChain: public timechain {
     public:
-        TimeChain(): rateLimit(100,60) {}
+        TimeChain(ptr<data::networking::http> p): rateLimit(100,60), http(p), api(p) {}
         double price(timestamp timestamp);
 
         list<ledger::block_header> headers(uint64 since_height) override;
@@ -31,9 +32,10 @@ namespace Cosmos::MatterPool {
 
         bytes block(const digest256&) const override;
         bool broadcast(const data::bytes_view&) override;
+        
     private:
         mutable data::tools::rate_limiter rateLimit;
-        mutable data::networking::Http http;
+        mutable ptr<data::networking::http> http;
         mutable MatterPool::Api api;
         mutable Mongo::DB db;
 
