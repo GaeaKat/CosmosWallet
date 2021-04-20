@@ -142,15 +142,15 @@ namespace Cosmos::MatterPool {
         waitForRateLimit();
         string output;
         if(((long)t) > BSV_FORK_TIMESTAMP) {
-            output = this->http.GET("api.coingecko.com",
+            output = http->GET("api.coingecko.com",
                                     "/api/v3/coins/bitcoin-cash-sv/history?date=" + string(buffer));
         } else if(((long)t) > CASH_FORK_TIMESTAMP) {
-            output = this->http.GET("api.coingecko.com",
+            output = http->GET("api.coingecko.com",
                                     "/api/v3/coins/bitcoin-cash/history?date=" + string(buffer));
         }
         else {
             // bitcoin
-            output = this->http.GET("api.coingecko.com",
+            output = http->GET("api.coingecko.com",
                                     "/api/v3/coins/bitcoin/history?date=" + string(buffer));
         }
         try {

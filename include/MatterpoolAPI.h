@@ -6,10 +6,11 @@
 #include "types.h"
 #include <data/tools/rate_limiter.h>
 #include <data/types.hpp>
-#include <data/networking/http.h>
+#include <data/networking/http.hpp>
 #include <gigamonkey/hash.hpp>
 #include <gigamonkey/ledger.hpp>
 #include <gigamonkey/address.hpp>
+#include <gigamonkey/mapi/mapi.hpp>
 
 #ifndef COSMOSWALLET_MATTERPOOLAPI_H
 #define COSMOSWALLET_MATTERPOOLAPI_H
@@ -24,10 +25,10 @@ namespace Cosmos::MatterPool {
     class Api {
     public:
         
-        Api() : rateLimit(100,60) {}
+        Api(ptr<data::networking::http> p) : rateLimit(100,60), http(p) {}
         list<ledger::block_header> headers(uint64 since_height) ;
 
-        bytes transaction(const digest256 &) ;
+        bytes transaction(const digest256 &);
         json transactions(const address &);
         //Merkle::path merkle_path(const digest256 &digest) const;
 
@@ -41,9 +42,13 @@ namespace Cosmos::MatterPool {
 
         //bytes block(const digest256 &digest) const ;
         
+        Gigamonkey::merchant_api mapi() {
+            return Gigamonkey::merchant_api{"merchantapi.matterpool.io", http};
+        }
+        
     private:
-        mutable data::tools::rate_limiter rateLimit;
-        mutable data::networking::Http http;
+        data::tools::rate_limiter rateLimit;
+        ptr<data::networking::http> http;
         
         void waitForRateLimit();
     };
