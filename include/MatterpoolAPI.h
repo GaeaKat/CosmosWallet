@@ -42,8 +42,8 @@ namespace Cosmos::MatterPool {
 
         //bytes block(const digest256 &digest) const ;
         
-        Gigamonkey::merchant_api mapi() {
-            return Gigamonkey::merchant_api{"merchantapi.matterpool.io", http};
+        Gigamonkey::MAPI::merchant_api mapi() {
+            return Gigamonkey::MAPI::merchant_api{"merchantapi.matterpool.io", http};
         }
         
     private:
