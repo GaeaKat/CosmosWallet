@@ -1,4 +1,5 @@
 #include <iostream>
+#include <data/networking/http.hpp>
 #include "include/matterpool_timechain.h"
 #include "include/mongodb_db.h"
 
