@@ -82,6 +82,9 @@ if(MYSQL_FOUND)
     message("MySQL: ${MYSQL_LIBRARIES}")
     include_directories(${MYSQL_INCLUDE_DIRS})
 endif()
+
+#find_package(libpqxx REQUIRED)
+
 if(PACKAGE_TESTS)
     enable_testing()
     add_subdirectory(test)
