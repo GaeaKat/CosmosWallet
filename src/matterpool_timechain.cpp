@@ -34,8 +34,8 @@ namespace Cosmos::MatterPool {
         auto tmp=data::entry<txid, ledger::double_entry>(id, ledger::double_entry());
 
         return tmp;
-
     }
+
 
     ledger::block_header TimeChain::header(const digest256 &digest) const {
         auto headerOut=db[digest];
