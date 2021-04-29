@@ -2,9 +2,9 @@
 #include <data/networking/http.hpp>
 #include "include/matterpool_timechain.h"
 #include "include/mongodb_db.h"
-
-#include <mysql/jdbc.h>
+#include "include/sql.h"
 #include <pqxx/pqxx>
+
 int main() {
     using namespace Cosmos;
     std::cout << "Hello, World!" << std::endl;
@@ -22,9 +22,10 @@ int main() {
     string password="password";
     string db="dbaname";
     try {
+        
         sql::Driver * driver = sql::mysql::get_driver_instance();
         std::cout << "Creating session on " << url << std::endl;
-        std::unique_ptr<sql::Connection> con(driver->connect(url,user,password));
+        std::unique_ptr<sql::Connection> con(driver->connect(url, user, password));
         con->setSchema(db);
         std::unique_ptr<sql::Statement> stmt(con->createStatement());
         std::unique_ptr< sql::ResultSet > res(stmt->executeQuery("SHOW TABLES"));
