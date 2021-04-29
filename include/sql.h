@@ -7,6 +7,7 @@
 
 #include "types.h"
 #include <mysql/jdbc.h>
+#include <pqxx/pqxx>
 
 namespace Cosmos {
     

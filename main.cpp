@@ -3,7 +3,6 @@
 #include "include/matterpool_timechain.h"
 #include "include/mongodb_db.h"
 #include "include/sql.h"
-#include <pqxx/pqxx>
 
 int main() {
     using namespace Cosmos;
