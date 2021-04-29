@@ -40,6 +40,8 @@ namespace Cosmos {
         using namespace Gigamonkey::Boost;
     }
     
+    constexpr int satoshi_dust{546};
+    
     std::vector<char> HexToBytes(const string& hex);
 
     namespace BitcoinHeader {
