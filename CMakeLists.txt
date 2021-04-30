@@ -79,8 +79,10 @@ if(PACKAGE_TESTS)
     enable_testing()
     add_subdirectory(test)
 endif()
-add_executable(CosmosWallet main.cpp src/matterpool_timechain.cpp
+add_executable(CosmosWallet main.cpp 
+        src/matterpool_timechain.cpp
         src/MatterpoolAPI.cpp
+        src/hd_wallet.cpp
         src/types.cpp
         src/mongodb_db.cpp)
 target_include_directories(CosmosWallet PUBLIC include)
