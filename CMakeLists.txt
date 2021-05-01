@@ -77,6 +77,12 @@ include_directories(${LIBMONGOCXX_INCLUDE_DIRS})
 include_directories(${LIBBSONCXX_INCLUDE_DIRS})
 
 find_package(MySQL REQUIRED)
+
+set(PQXX /usr/include/)
+include_directories(${PQXX})
+find_library(PQXX_LIB pqxx)
+find_library(PQ_LIB pq)
+
 #test
 if(MYSQL_FOUND)
     message("MySQL: ${MYSQL_LIBRARIES}")
@@ -94,4 +100,4 @@ add_executable(CosmosWallet main.cpp src/matterpool_timechain.cpp
         src/types.cpp
         src/mongodb_db.cpp)
 target_include_directories(CosmosWallet PUBLIC include)
-target_link_libraries(CosmosWallet gigamonkey yaml-cpp ${LIBMONGOCXX_LIBRARIES} ${LIBBSONCXX_LIBRARIES} ${MYSQL_LIBRARIES})
+target_link_libraries(CosmosWallet gigamonkey yaml-cpp ${LIBMONGOCXX_LIBRARIES} ${LIBBSONCXX_LIBRARIES} ${MYSQL_LIBRARIES} ${PQXX_LIB} ${PQ_LIB})

@@ -4,7 +4,7 @@
 #include "include/mongodb_db.h"
 
 #include <mysql/jdbc.h>
-
+#include <pqxx/pqxx>
 int main() {
     using namespace Cosmos;
     std::cout << "Hello, World!" << std::endl;
@@ -53,7 +53,31 @@ int main() {
         std::cout << " (MySQL error code: " << e.getErrorCode();
         std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
 
-        return EXIT_FAILURE;
+        //return EXIT_FAILURE;
+    }
+
+    try {
+        pqxx::connection C(
+                "dbname = database user = username password = password hostaddr =ipaddress port = 5432");
+        if (C.is_open()) {
+            std::cout << "Opened database successfully: " << C.dbname() << std::endl;
+        } else {
+            std::cout << "Can't open database" << std::endl;
+            return 1;
+        }
+        //* Create SQL statement *//
+        char *sql = "SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND  schemaname != 'information_schema'";
+
+        pqxx::nontransaction N(C);
+        pqxx::result R(N.exec(sql));
+        std::cout << "Postgres tables" << std::endl;
+        for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
+            std::cout << "table: " << c[1].as<std::string>() << std::endl;
+        }
+        C.disconnect();
+    }catch (const std::exception &e) {
+        std::cerr <<"Errored: " << e.what()  << std::endl;
+        return 1;
     }
 
 
