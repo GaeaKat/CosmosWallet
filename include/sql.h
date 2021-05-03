@@ -36,6 +36,8 @@ namespace Cosmos {
             delete Connection;
         }
         
+        list<string> show_tables();
+        
     private:
         sql::Connection *Connection;
         sql_session(sql::Connection *conn) : Connection{conn} {}
