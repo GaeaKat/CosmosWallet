@@ -153,6 +153,8 @@ namespace Cosmos::MatterPool {
         waitForRateLimit();
         string output=http->GET("txdb.mattercloud.io","/api/v1/txblock/"+ tmp);
         json jOutput=json::parse(output);
+        if(jOutput["result"].empty())
+            return -1;
         return jOutput["result"][0]["height"];
     }
 
