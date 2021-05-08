@@ -25,6 +25,8 @@ namespace Cosmos::MatterPool {
         auto trans=api.transaction(id);
         auto ptr=std::make_shared<bytes>(trans);
         auto height=api.transaction_height(const_cast<digest256 &>(id));
+        if(height==-1)
+            return data::entry<txid,ledger::double_entry>(txid{});
         auto header=this->header(height);
         if(header.valid()) {
             auto entry=data::entry<txid, ledger::double_entry>(id, ledger::double_entry(ptr, Merkle::proof(), header.Header));
