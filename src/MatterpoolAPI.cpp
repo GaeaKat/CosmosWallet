@@ -117,7 +117,7 @@ namespace Cosmos::MatterPool {
     }
 
     bytes Api::transaction(const digest256 &digest)   {
-        auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
+        auto tmp=data::encoding::hex::write(digest,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         string output=http->GET("media.bitcoinfiles.org","/tx/"+ tmp+"/raw");
         ptr<bytes> hex = data::encoding::hex::read(output);
@@ -125,7 +125,7 @@ namespace Cosmos::MatterPool {
     }
 
     json Api::header(const digest256 &digest) {
-        auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
+        auto tmp=data::encoding::hex::write(digest,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         string output=http->GET("txdb.mattercloud.io","/api/v1/blockheader/"+ tmp+"?limit=1&order=asc");
         json jOutput=json::parse(output);
@@ -133,7 +133,7 @@ namespace Cosmos::MatterPool {
     }
 
     bytes Api::raw_header(const digest256 &digest) {
-        auto tmp=data::encoding::hex::write(digest,data::endian::order::little,data::encoding::hex::letter_case::lower);
+        auto tmp=data::encoding::hex::write(digest,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         string output=http->GET("media.bitcoinfiles.org","/rawblockheader/"+ tmp);
         ptr<bytes> hex = data::encoding::hex::read(output);
@@ -149,7 +149,7 @@ namespace Cosmos::MatterPool {
     }
 
     uint64 Api::transaction_height(digest256 &txid) {
-        auto tmp=data::encoding::hex::write(txid,data::endian::order::little,data::encoding::hex::letter_case::lower);
+        auto tmp=data::encoding::hex::write(txid,data::encoding::hex::letter_case::lower);
         waitForRateLimit();
         string output=http->GET("txdb.mattercloud.io","/api/v1/txblock/"+ tmp);
         json jOutput=json::parse(output);

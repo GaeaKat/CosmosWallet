@@ -101,9 +101,10 @@ namespace Cosmos::Mongo {
 
     const bsoncxx::document::value DB::to_document(Gigamonkey::Bitcoin::headers::header header) {
         auto builder = bsoncxx::builder::stream::document{};
-        auto hashString=data::encoding::hex::write(header.Hash, data::endian::order::little, data::encoding::hex::letter_case::lower);
-        auto previousString=data::encoding::hex::write(header.Header.Previous, data::endian::order::little, data::encoding::hex::letter_case::lower);
-        auto markleString=data::encoding::hex::write(header.Header.MerkleRoot, data::endian::order::little, data::encoding::hex::letter_case::lower);
+
+        auto hashString=data::encoding::hex::write(header.Hash,  data::encoding::hex::letter_case::lower);
+        auto previousString=data::encoding::hex::write(header.Header.Previous,  data::encoding::hex::letter_case::lower);
+        auto markleString=data::encoding::hex::write(header.Header.MerkleRoot,  data::encoding::hex::letter_case::lower);
         //bsoncxx::document::value doc_value =make_document(
         //        kvp("Hash",hashString)
         //        );
@@ -142,7 +143,7 @@ namespace Cosmos::Mongo {
 
     Gigamonkey::Bitcoin::headers::header DB::operator[](const digest256 &digest) const {
         initialize();
-        auto hashString=data::encoding::hex::write(digest, data::endian::order::little, data::encoding::hex::letter_case::lower);
+        auto hashString=data::encoding::hex::write(digest,data::encoding::hex::letter_case::lower);
         bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
                 headers_collection.find_one(document{} << "Hash" << hashString << finalize);
         if(maybe_result) {
@@ -158,8 +159,8 @@ namespace Cosmos::Mongo {
     const bsoncxx::document::value DB::transaction_to_document(
             data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry> transaction) {
         auto builder = bsoncxx::builder::stream::document{};
-        auto txHash=data::encoding::hex::write(transaction.Key, data::endian::order::little, data::encoding::hex::letter_case::lower);
-        auto hashString=data::encoding::hex::write(transaction.value().Header.hash(), data::endian::order::little, data::encoding::hex::letter_case::lower);
+        auto txHash=data::encoding::hex::write(transaction.Key,  data::encoding::hex::letter_case::lower);
+        auto hashString=data::encoding::hex::write(transaction.value().Header.hash(),  data::encoding::hex::letter_case::lower);
 
         bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
                 headers_collection.find_one(document{} << "Hash" << hashString << finalize);
@@ -167,7 +168,7 @@ namespace Cosmos::Mongo {
 
             auto doc = maybe_result->view();
             auto tmpBytes=transaction.Value.get();
-            auto data=data::encoding::hex::write(*tmpBytes, data::endian::order::little, data::encoding::hex::letter_case::lower);
+            auto data=data::encoding::hex::write(*tmpBytes,  data::encoding::hex::letter_case::lower);
             auto tmp=doc["_id"].get_oid();
 
             bsoncxx::document::value doc_value = builder
@@ -226,7 +227,7 @@ namespace Cosmos::Mongo {
     data::entry<Gigamonkey::Bitcoin::txid, Gigamonkey::Bitcoin::ledger::double_entry>
     DB::get_transaction(const digest256 &digest) {
         initialize();
-        auto hashString=data::encoding::hex::write(digest, data::endian::order::little, data::encoding::hex::letter_case::lower);
+        auto hashString=data::encoding::hex::write(digest, data::encoding::hex::letter_case::lower);
         bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
                 transaction_collection.find_one(document{} << "Hash" << hashString << finalize);
         if(maybe_result) {
