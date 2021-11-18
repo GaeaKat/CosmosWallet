@@ -66,6 +66,12 @@ if(NOT TARGET gigamonkey)
 endif()
 find_package(yaml-cpp)
 
+find_package(Getdns REQUIRED)
+if(GETDNS_INCLUDE_DIR)
+    message(STATUS "GetDNS INCLUDE Dirs: ${GETDNS_INCLUDE_DIR}")
+    include_directories(${GETDNS_INCLUDE_DIR})
+endif()
+
 ## Enable testing
 include(CTest)
 #mongodb cxx wrapper
@@ -84,6 +90,8 @@ add_executable(CosmosWallet main.cpp
         src/MatterpoolAPI.cpp
         src/hd_wallet.cpp
         src/types.cpp
-        src/mongodb_db.cpp)
+        src/mongodb_db.cpp
+        src/utils/paymail/capability.cpp
+        src/utils/paymail/paymail.cpp)
 target_include_directories(CosmosWallet PUBLIC include)
-target_link_libraries(CosmosWallet gigamonkey yaml-cpp ${LIBMONGOCXX_LIBRARIES} ${LIBBSONCXX_LIBRARIES})
+target_link_libraries(CosmosWallet gigamonkey yaml-cpp ${GETDNS_LIBRARIES} ${LIBMONGOCXX_LIBRARIES} ${LIBBSONCXX_LIBRARIES})

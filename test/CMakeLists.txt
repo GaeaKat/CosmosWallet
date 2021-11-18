@@ -12,7 +12,7 @@ macro(package_add_test TESTNAME)
     # the test executable.  Remove g_test_main if writing your own main function.
     target_include_directories(${TESTNAME} PUBLIC .)
     target_include_directories(${TESTNAME} PUBLIC ../include)
-    target_link_libraries(${TESTNAME} gmock_main gigamonkey data gtest_main)
+    target_link_libraries(${TESTNAME} gmock_main gigamonkey data gtest_main ${GETDNS_LIBRARIES})
     # gtest_discover_tests replaces gtest_add_tests,
     # see https://cmake.org/cmake/help/v3.10/module/GoogleTest.html for more options to pass to it
 
@@ -35,3 +35,6 @@ package_add_test(TestTransaction TestTransaction.cpp ../src/matterpool_timechain
         ../src/MatterpoolAPI.cpp
         ../src/types.cpp
         ../src/mongodb_db.cpp)
+
+package_add_test(TestPaymail testPaymail.cpp ../src/utils/paymail/paymail.cpp
+        ../src/utils/paymail/capability.cpp)
